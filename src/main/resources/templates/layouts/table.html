@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:fragment="tableLayout (year, books)">
+    <div class="control">
+        <form method="post"
+              action="/book/form/add">
+            <input type="submit" value="Добавить" class="form-button">
+        </form>
+        <div class="year">
+            <a th:href="@{'/profile/books/' + ${year - 1}}"><img src="/img/icons/arrow/arrow-left.png"
+                                                                 alt="Стрелка влево"></a>
+            <span th:text="${year}"></span>
+            <a th:href="@{'/profile/books/' + ${year + 1}}"><img src="/img/icons/arrow/arrow-right.png"
+                                                                 alt="Стрелка вправо"></a>
+        </div>
+    </div>
+    <div class="scroll-table">
+        <table>
+            <colgroup>
+                <col class="col-1">
+                <col class="col-4">
+                <col class="col-3">
+                <col class="col-2">
+                <col class="col-1">
+                <col class="col-4">
+                <col class="col-end">
+            </colgroup>
+            <thead>
+            <tr>
+                <th hidden>id</th>
+                <th>Старт</th>
+                <th>Тип</th>
+                <th>Автор</th>
+                <th>Название</th>
+                <th colspan="2">Завершение</th>
+                <th hidden></th>
+                <th hidden></th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <th:block th:unless="${books.isEmpty()}">
+                <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.getId()}" hidden></td>
+                    <td th:text="${#dates.monthName(book.getDateStart())}"></td>
+                    <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}">
+                        <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
+                    </td>
+                    <td th:if="${book.getType() == 'Бумажная'}" th:title="${book.getType()}">
+                        <img src="/img/icons/book/type/book.png" th:alt="${book.getType()}">
+                    </td>
+                    <td th:if="${book.getType() == 'Электронная'}" th:title="${book.getType()}">
+                        <img src="/img/icons/book/type/ebook.png" th:alt="${book.getType()}">
+                    </td>
+                    <td th:text="${book.getAuthor()}"></td>
+                    <td th:text="${book.getName()}"></td>
+                    <td th:text="${#dates.monthName(book.getDateFinish())}"></td>
+                    <td th:text="${#dates.year(book.getDateFinish())}"></td>
+                    <td hidden th:text="${#dates.format(book.getDateStart(), 'yyyy-MM-dd')}"></td>
+                    <td hidden th:text="${#dates.format(book.getDateFinish(), 'yyyy-MM-dd')}"></td>
+                    <td>
+                        <div class="action">
+                            <th:bock th:if="${book.getDateFinish() == null}">
+                                <form
+                                        method="post"
+                                        th:action="@{${'/book/updateDateFinish/' + year + '/' + book.getId()}}">
+                                    <input type="image"
+                                           src="/img/icons/book/button/finish.png"
+                                           alt="Завершить чтение"
+                                           title="Завершить чтение"
+                                           class="button">
+                                </form>
+                            </th:bock>
+                            <th:block th:unless="${book.getDateFinish() == null}">
+                                <form
+                                        method="post"
+                                        th:action="@{${'/book/updateDateFinish/' + year + '/' + book.getId()}}">
+                                    <input type="image"
+                                           src="/img/icons/book/button/star.png"
+                                           alt="Оставить комментарий"
+                                           title="Оставить комментарий"
+                                           class="button">
+                                </form>
+                            </th:block>
+                            <form
+                                    method="post"
+                                    th:action="@{'/book/form/edit/' + ${book.getId()}}">
+                                <input type="image"
+                                       src="/img/icons/book/button/edit.png"
+                                       alt="Редактировать"
+                                       title="Редактировать"
+                                       class="button">
+                            </form>
+                            <form method="post" th:action="@{${'/book/delete/' + year +'/' + book.getId()}}">
+                                <input type="image"
+                                       src="/img/icons/book/button/delete.png"
+                                       alt="Удалить"
+                                       title="Удалить"
+                                       class="button">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </th:block>
+        </table>
+        <th:block th:if="${books.isEmpty()}">
+            <div class="empty">Список пуст</div>
+        </th:block>
+    </div>
+</th:block>
+
+<th:block th:fragment="tablePlanLayout (name, books)">
+    <div>
+        <div class="control">
+            <form method="post"
+                  action="/book/form/plan/add">
+                <input type="submit" value="Добавить" class="form-button">
+            </form>
+            <form class="search"
+                  method="get"
+                  action="/profile/books/plan/search">
+                <label>Название</label><input type="text" name="name" th:value="${name != null ? name : null}">
+                <input type="submit" value="Поиск" class="button">
+            </form>
+        </div>
+        <div class="scroll-table">
+            <table>
+                <colgroup>
+                    <col class="col-1">
+                    <col class="col-4">
+                    <col class="col-4">
+                    <col class="col-Plan-2">
+                    <col class="col-Plan-1">
+                    <col class="col-end">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th hidden>Id</th>
+                    <th colspan="2">Добавлено</th>
+                    <th>Тип</th>
+                    <th>Автор</th>
+                    <th>Название</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <th:block th:unless="${books.isEmpty()}">
+                    <tbody>
+                    <tr th:each="book : ${books}">
+                        <td hidden th:text="${book.getId()}"></td>
+                        <td th:text="${#dates.monthName(book.getCreated())}"></td>
+                        <td th:text="${#dates.year(book.getCreated())}"></td>
+                        <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}">
+                            <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
+                        </td>
+                        <td th:if="${book.getType() == 'Бумажная'}" th:title="${book.getType()}">
+                            <img src="/img/icons/book/type/book.png" th:alt="${book.getType()}">
+                        </td>
+                        <td th:if="${book.getType() == 'Электронная'}" th:title="${book.getType()}">
+                            <img src="/img/icons/book/type/ebook.png" th:alt="${book.getType()}">
+                        </td>
+                        <td th:text="${book.getAuthor()}"></td>
+                        <td th:text="${book.getName()}"></td>
+                        <td>
+                            <div class="action">
+                                <form
+                                        method="post"
+                                        th:action="@{'/book/updateDateStart/' + ${book.getId()}}">
+                                    <input type="image"
+                                           src="/img/icons/book/button/start.png"
+                                           alt="Начать чтение"
+                                           title="Начать чтение"
+                                           class="button">
+                                </form>
+                                <form
+                                        method="post"
+                                        th:action="@{'/book/form/plan/edit/' + ${book.getId()}}">
+                                    <input type="image"
+                                           src="/img/icons/book/button/edit.png"
+                                           alt="Редактировать"
+                                           title="Редактировать"
+                                           class="button">
+                                </form>
+                                <form method="post"
+                                      th:action="@{'/book/plan/delete/' + ${book.getId()}}">
+                                    <input type="image"
+                                           src="/img/icons/book/button/delete.png"
+                                           title="Удалить"
+                                           class="button">
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </th:block>
+            </table>
+            <th:block th:if="${books.isEmpty()}">
+                <div class="empty">Список пуст</div>
+            </th:block>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="reportLayout (books)">
+    <div class="scroll-table">
+        <table>
+            <colgroup>
+                <col span="2" class="col-1">
+                <col class="col-4">
+                <col class="col-3">
+                <col class="col-2">
+                <col span="2" class="col-1">
+                <col class="col-1">
+            </colgroup>
+            <thead>
+            <tr>
+                <th colspan="2">Старт</th>
+                <th>Тип</th>
+                <th>Автор</th>
+                <th>Название</th>
+                <th colspan="2">Завершение</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <th:block th:unless="${books.isEmpty()}">
+                <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${#dates.monthName(book.getDateStart())}"></td>
+                    <td th:text="${#dates.year(book.getDateStart())}"></td>
+                    <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}">
+                        <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
+                    </td>
+                    <td th:if="${book.getType() == 'Бумажная'}" th:title="${book.getType()}">
+                        <img src="/img/icons/book/type/book.png" th:alt="${book.getType()}">
+                    </td>
+                    <td th:if="${book.getType() == 'Электронная'}" th:title="${book.getType()}">
+                        <img src="/img/icons/book/type/ebook.png" th:alt="${book.getType()}">
+                    </td>
+                    <td th:text="${book.getAuthor()}" class="name"></td>
+                    <td th:text="${book.getName()}" class="name"></td>
+                    <td th:text="${#dates.monthName(book.getDateFinish())}"></td>
+                    <td th:text="${#dates.year(book.getDateFinish())}"></td>
+                    <td>
+                        <div class="action">
+                            <form
+                                    method="post"
+                                    th:action="@{'/comment/' + ${book.getId()}}">
+                                <input type="image"
+                                       src="/img/icons/book/button/star.png"
+                                       alt="Оставить комментарий"
+                                       title="Оставить комментарий"
+                                       class="button">
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </th:block>
+        </table>
+        <th:block th:if="${books.isEmpty()}">
+            <div class="empty">Список пуст</div>
+        </th:block>
+    </div>
+</th:block>
+</body>
+</html>

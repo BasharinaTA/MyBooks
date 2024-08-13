@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои книги</title>
+    <link rel="stylesheet" href="/css/start.css">
+    <link rel="stylesheet" href="/css/profile.css">
+</head>
+<body>
+<th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
+<main>
+    <div class="container">
+        <form method="post" action="/profile/update" class="form-profile">
+            <label>Логин:<input type="text"
+                               th:value="${profile.getUser().getUsername()}"
+                               disabled></label>
+            <label>Имя:<input type="text"
+                             th:value="${profile.getName()}"
+                             name="name"></label>
+            <label>Фамилия:<input type="text"
+                                 th:value="${profile.getSurname()}"
+                                 name="surname"></label>
+            <input type="submit" value="Сохранить" class="form-button">
+        </form>
+        <form method="post" action="/logout" class="form-profile">
+            <input type="submit" value="Выйти из профиля" class="form-button">
+        </form>
+    </div>
+</main>
+</body>
+</html>

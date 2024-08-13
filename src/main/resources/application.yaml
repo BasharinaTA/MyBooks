@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/devBooks
+    username: postgres
+    password: postgres
+  flyway:
+    url: jdbc:postgresql://localhost:5432/devBooks
+    user: postgres
+    password: postgres
+    locations: classpath:/db/migration
+  jpa:
+    show-sql: true

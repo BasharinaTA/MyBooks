@@ -1,0 +1,33 @@
+input,
+select,
+textarea {
+    color: #524d0a;
+    font-size: 18px;
+    outline: none;
+    border: 1px solid #524d0a;
+    border-radius: 7px;
+    padding: 10px;
+    flex-basis: 70%;
+    background-color: inherit;
+    font-family: Arial, sans-serif;
+}
+
+select {
+    flex-basis: 75%;
+}
+
+form label, form div {
+    display: flex;
+    justify-content: space-between;
+    /*align-items: center;*/
+}
+
+.button {
+    color: #524d0a;
+    box-shadow: 1px 1px 4px 1px #a3a37b;
+    border-radius: 7px;
+    padding: 5px;
+    border: 2px solid #86800b;
+    font-size: 20px;
+    background-color: inherit;
+}

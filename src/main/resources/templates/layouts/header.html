@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:fragment="headerLayout (nav)">
+    <header>
+        <div sec:authorize="isAuthenticated()">
+            <nav>
+                <a href="/profile/books" th:class="${nav == 'book' ? 'active' : null}"> Книги</a>
+                <a href="/profile/books/plan" th:class="${nav == 'plan' ? 'active' : null}"> Планы</a>
+                <a href="/profile/books/notRead" th:class="${nav == 'info' ? 'active' : null}"> Информация</a>
+            </nav>
+            <div>
+                <a href="/profile" th:class="a-button + ${nav == 'profile' ? ' active' : ''}">Профиль</a>
+            </div>
+        </div>
+        <div sec:authorize="!isAuthenticated()">
+            <nav></nav>
+            <div>
+                <a href="/login" th:class="a-button + ${nav == 'login' ? ' active' : ''}">Войти</a>
+                <a href="/registration" th:class="a-button + ${nav == 'registration' ? ' active' : ''}">Регистрация</a>
+            </div>
+        </div>
+    </header>
+</th:block>
+</body>
+</html>

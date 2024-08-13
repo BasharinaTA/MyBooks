@@ -1,0 +1,34 @@
+.form-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+label {
+    width: 35%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+input {
+    color: #524d0a;
+    font-size: 18px;
+    outline: none;
+    border: 1px solid #524d0a;
+    border-radius: 7px;
+    padding: 10px;
+    margin: 10px;
+    flex-basis: 73%;
+    font-family: Arial, sans-serif;
+}
+
+.form-button {
+    color: #524d0a;
+    background-color: inherit;
+    border: 2px solid #968f10;
+    border-radius: 7px;
+    padding: 10px;
+    font-size: 20px;
+    width: 35%;
+}

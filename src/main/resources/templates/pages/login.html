@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои книги</title>
+    <link rel="stylesheet" href="/css/start.css">
+    <link rel="icon" href="/img/book_logo.png">
+</head>
+<body>
+<th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
+<main>
+    <div class="container">
+        <form method="post"
+              th:action="@{${login ? '/login' : '/user/save'}}"
+              class="form-login">
+            <th:block th:if="${!login}">
+                <input type="text"
+                       placeholder="Имя"
+                       name="name"
+                       th:value="${error != null ? name : null}"
+                       required
+                       maxlength="20">
+                <input type="text"
+                       placeholder="Фамилия"
+                       name="surname"
+                       th:value="${error != null ? surname : null}"
+                       required
+                       maxlength="30">
+            </th:block>
+                <input type="text"
+                       placeholder="Логин"
+                       name="username"
+                       th:value="${error != null ? username : null}"
+                       required
+                       maxlength="20">
+                <th:block th:if="${error == 'username'}">
+                    <label class="error">Указанный пользователь уже существует</label>
+                </th:block>
+                <input type="password"
+                       placeholder="Пароль"
+                       name="password"
+                       required
+                       maxlength="15">
+                <th:block th:if="${errorAuth}">
+                    <label class="error">Логин или пароль указан неверно</label>
+                </th:block>
+                <th:block th:if="${!login}">
+                    <input type="password"
+                           placeholder="Повторить пароль"
+                           name="repeatPassword"
+                           required
+                           maxlength="15">
+                    <th:block th:if="${error == 'password'}">
+                        <label class="error">Пароли не совпадают</label>
+                    </th:block>
+                </th:block>
+                <input type="submit" th:value="${login ? 'Войти' : 'Регистрация' }" class="form-button">
+        </form>
+    </div>
+</main>
+</body>
+</html>

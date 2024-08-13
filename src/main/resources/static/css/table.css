@@ -1,0 +1,146 @@
+.scroll-table {
+    height: 520px;
+    overflow: auto;
+    border: 2px solid #968f10;
+    margin: 5px auto;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    width: 100%;
+}
+
+.scroll-table thead th {
+    padding: 13px;
+    text-align: center;
+    background-color: #d1ca9d;
+    color: #6d6500;
+}
+
+.scroll-table tbody td {
+    word-wrap: break-word;
+    border-bottom: 1px solid #968f10;
+    padding: 4px;
+    font-size: 18px;
+    min-height: 47px;
+}
+
+.col-1 {
+    width: 6%;
+    border-right: 1px solid #968f10;
+}
+
+.col-2 {
+    width: 28%;
+    border-right: 1px solid #968f10;
+}
+
+.col-3 {
+    width: 16%;
+    border-right: 1px solid #968f10;
+}
+
+.col-4 {
+    width: 4%;
+    border-right: 1px solid #968f10;
+}
+
+.col-Plan-1 {
+    width: 40%;
+    border-right: 1px solid #968f10;
+    text-align: left;
+}
+
+.col-Plan-2 {
+    width: 34%;
+    border-right: 1px solid #968f10;
+}
+
+.col-end {
+    width: 9%;
+}
+
+td div,
+td form {
+    display: flex;
+    justify-content: center;
+}
+
+thead th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    border-bottom: 1px solid #524d0a;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+}
+
+.empty {
+    font-size: 24px;
+    text-align: center;
+    margin: 20px;
+}
+
+.control {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 5px;
+}
+
+.year {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid #968f10;
+    border-radius: 10px;
+    /*background-color: #fffeea;*/
+    width: 15%;
+    padding: 0 10px;
+}
+
+.add {
+    width: 10%;
+    padding: 15px;
+}
+
+/*.scroll-table tbody tr:nth-child(even) {*/
+/*    background: #d1ca9d6b;*/
+/*}*/
+
+.scroll-table tbody tr:nth-child(odd) {
+    background: #fffef269;
+}
+
+
+.scroll-table tbody td.name {
+    text-align: left;
+    padding-left: 10px;
+}
+
+/* Стили для скролла */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.action {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+span {
+    padding: 10px;
+}
