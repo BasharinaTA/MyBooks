@@ -1,18 +1,17 @@
 package com.mybooks.model.entities;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum Report {
 
-    notRead("Недочитанные книги"),
-    wrongDates("Книги с некорректными датами"),
-    lastRead("Последние прочитанные книги"),
-    thisYearRead("Дочитанные за последний год книги");
+    NOT_READ("Недочитанные книги", "notRead"),
+    WRONG_DATES("Книги с некорректными датами", "wrongDates"),
+    LAST_READ("Последние прочитанные книги", "lastRead"),
+    THIS_YEAR_READ("Дочитанные за последний год книги", "thisYearRead");
 
     private final String name;
-    Report(String name) {
-        this. name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+    private final String url;
 }

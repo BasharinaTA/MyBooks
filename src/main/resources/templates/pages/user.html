@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои книги</title>
+    <link rel="icon" href="/img/icons/logo/book_logo.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Jost:ital,wght@0,100..900;1,100..900&family=Manrope:wght@200..800&family=Martian+Mono:wght@100..800&family=Overpass:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+          rel="stylesheet">
+</head>
+<body>
+<th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
+<main>
+    <div class="container">
+        <form method="post"
+              th:action="@{${'/admin/user/update/' + user.getId()}}"
+              class="form-save">
+            <h3 class="form-header">Редактировать пользователя</h3>
+            <label><span>Пользователь</span>
+                <input type="text" th:value="${user.profile.getSurname() + ' ' + user.profile.getName()}" disabled>
+            </label>
+            <label><span>Логин</span>
+                <input type="text" th:value="${user.getUsername()}" disabled>
+            </label>
+            <label><span>Роль</span>
+                <div class="dropdown">
+                    <input type="text"
+                           th:value="${user.getRole()}"
+                           class="dropdown-input hide"
+                           name="strRole">
+                    <button type="button"
+                            class="dropdown-button"
+                            th:text="${user.getRole()}">
+                    </button>
+                    <ul class="dropdown-list hide">
+                        <li th:each="role : ${roles}"
+                            class="dropdown-list-item"
+                            th:text="${role}"
+                            th:data-value="${role}">
+                        </li>
+                    </ul>
+                </div>
+            </label>
+            <label><span>Статус</span>
+                <div class="dropdown">
+                    <input type="text"
+                           th:value="${user.getStatus()}"
+                           class="dropdown-input hide"
+                           name="strStatus">
+                    <button type="button"
+                            class="dropdown-button"
+                            th:text="${user.getStatus()}">
+                    </button>
+                    <ul class="dropdown-list hide">
+                        <li th:each="status : ${statuses}"
+                            class="dropdown-list-item"
+                            th:text="${status}"
+                            th:data-value="${status}">
+                        </li>
+                    </ul>
+                </div>
+            </label>
+            <div class="buttons">
+                <a href="/admin" class="form-button align-center">Отмена</a>
+                <input type="submit" value="Сохранить">
+            </div>
+        </form>
+    </div>
+</main>
+<script src="/js/dropdown.js"></script>
+</body>
+</html>

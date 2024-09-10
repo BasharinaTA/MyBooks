@@ -1,5 +1,10 @@
 package com.mybooks.model.entities;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum Type {
 
     AUDIOBOOK ("Аудиокнига"),
@@ -7,12 +12,4 @@ public enum Type {
     EBOOK ("Электронная");
 
     private final String description;
-
-    Type(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

@@ -1,9 +1,6 @@
 package com.mybooks.controllers;
 
-import com.mybooks.model.entities.Book;
-import com.mybooks.model.entities.Comment;
-import com.mybooks.model.entities.Profile;
-import com.mybooks.model.entities.Report;
+import com.mybooks.model.entities.*;
 import com.mybooks.services.ProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -14,15 +11,14 @@ import java.security.Principal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+
 @Controller
 @AllArgsConstructor
 @RequestMapping("/profile")
 public class ProfileController {
 
-    public static final String PAGES_BOOKS = "pages/books";
-    public static final String PAGES_PLAN = "pages/plan";
+    public static final String PAGES_BOOKS = "pages/main";
     public static final String REDIRECT_PROFILE = "redirect:/profile";
-    public static final String PAGES_INFO = "pages/info";
     private ProfileService profileService;
 
     @GetMapping("/books")
@@ -54,19 +50,19 @@ public class ProfileController {
         model.addAttribute("nav", "plan");
         model.addAttribute("book", new Book());
         model.addAttribute("books", profileService.getPlannedBooks(profile));
-        return PAGES_PLAN;
+        return PAGES_BOOKS;
     }
 
     @GetMapping("/books/plan/search")
     public String getBooksByName(Model model,
                                  Principal principal,
-                                 @RequestParam String name) {
+                                 @RequestParam String search) {
         Profile profile = profileService.getProfileByPrincipal(principal);
         model.addAttribute("nav", "plan");
-        model.addAttribute("info", "plan");
+        model.addAttribute("search", search);
         model.addAttribute("book", new Book());
-        model.addAttribute("books", profileService.getPlannedBooksByName(profile, name));
-        return PAGES_PLAN;
+        model.addAttribute("books", profileService.getPlannedBooksByName(profile, search));
+        return PAGES_BOOKS;
     }
 
     @PostMapping("/update")
@@ -82,39 +78,39 @@ public class ProfileController {
     public String getBooksNotRead(Principal principal, Model model) {
         Profile profile = profileService.getProfileByPrincipal(principal);
         model.addAttribute("nav", "info");
-        model.addAttribute("name", Report.notRead.getName());
+        model.addAttribute("name", Report.NOT_READ.getName());
         model.addAttribute("reports", Report.values());
         model.addAttribute("books", profileService.getNotReadBooks(profile));
-        return PAGES_INFO;
+        return PAGES_BOOKS;
     }
 
     @GetMapping("/books/wrongDates")
     public String getBooksWithWrongDate(Principal principal, Model model) {
         Profile profile = profileService.getProfileByPrincipal(principal);
         model.addAttribute("nav", "info");
-        model.addAttribute("name", Report.wrongDates.getName());
+        model.addAttribute("name", Report.WRONG_DATES.getName());
         model.addAttribute("reports", Report.values());
         model.addAttribute("books", profileService.getWrongDatesBooks(profile));
-        return PAGES_INFO;
+        return PAGES_BOOKS;
     }
 
     @GetMapping("/books/lastRead")
     public String getBooksLastRead(Principal principal, Model model) {
         Profile profile = profileService.getProfileByPrincipal(principal);
         model.addAttribute("nav", "info");
-        model.addAttribute("name", Report.lastRead.getName());
+        model.addAttribute("name", Report.LAST_READ.getName());
         model.addAttribute("reports", Report.values());
         model.addAttribute("books", profileService.getBooksLastRead(profile));
-        return PAGES_INFO;
+        return PAGES_BOOKS;
     }
 
     @GetMapping("/books/thisYearRead")
     public String getBooksThisYearRead(Principal principal, Model model) {
         Profile profile = profileService.getProfileByPrincipal(principal);
         model.addAttribute("nav", "info");
-        model.addAttribute("name", Report.thisYearRead.getName());
+        model.addAttribute("name", Report.THIS_YEAR_READ.getName());
         model.addAttribute("reports", Report.values());
         model.addAttribute("books", profileService.getBooksThisYearRead(profile));
-        return PAGES_INFO;
+        return PAGES_BOOKS;
     }
 }

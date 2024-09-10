@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface ProfileService {
 
-    Profile get(Integer id);
+    Profile getById(Integer id);
+
+    List<Profile> getAllByOrderBySurname();
 
     Profile getByUser(User user);
 
@@ -32,4 +34,6 @@ public interface ProfileService {
     Profile save(Profile profile);
 
     Profile update(Profile profile, String name, String surname);
+
+    List<Profile> getAllByUsername(String username);
 }

@@ -2,12 +2,15 @@ package com.mybooks.model.entities;
 
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name="comments")
 public class Comment {
@@ -20,17 +23,11 @@ public class Comment {
     @Column(name="text")
     private String text;
 
-    @Column(name="rate")
-    private boolean rate;
-
+    @CreationTimestamp
     @Column(name="created")
     private Date created;
 
     @OneToOne
     @JoinColumn(name="book_id")
     private Book book;
-
-//    @ManyToOne
-//    @JoinColumn(name="profile_id")
-//    private Profile profile;
 }

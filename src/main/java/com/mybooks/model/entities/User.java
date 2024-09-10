@@ -36,6 +36,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToOne(mappedBy="user")
+    @OneToOne(mappedBy="user", cascade=CascadeType.ALL)
     private Profile profile;
 }

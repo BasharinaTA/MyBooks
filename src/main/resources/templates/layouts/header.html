@@ -7,23 +7,26 @@
 <body>
 <th:block th:fragment="headerLayout (nav)">
     <header>
-        <div sec:authorize="isAuthenticated()">
+        <th:block sec:authorize="isAuthenticated()">
             <nav>
-                <a href="/profile/books" th:class="${nav == 'book' ? 'active' : null}"> Книги</a>
-                <a href="/profile/books/plan" th:class="${nav == 'plan' ? 'active' : null}"> Планы</a>
-                <a href="/profile/books/notRead" th:class="${nav == 'info' ? 'active' : null}"> Информация</a>
+                <a href="/profile/books" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'book' ? 'active' : null}">Книги</a>
+                <a href="/profile/books/plan" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'plan' ? 'active' : null}">Планы</a>
+                <a href="/profile/books/notRead" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'info' ? 'active' : null}">Информация</a>
+                <a href="/admin" sec:authorize="hasRole('ADMIN')" th:class="${nav == 'admin' ? 'active' : null}">Управление</a>
             </nav>
             <div>
-                <a href="/profile" th:class="a-button + ${nav == 'profile' ? ' active' : ''}">Профиль</a>
+                <a href="/profile" sec:authentication="name"  th:class="a-button + ${nav == 'profile' ? ' active' : ''}"></a>
             </div>
-        </div>
-        <div sec:authorize="!isAuthenticated()">
+        </th:block>
+
+        <th:block sec:authorize="!isAuthenticated()">
             <nav></nav>
             <div>
-                <a href="/login" th:class="a-button + ${nav == 'login' ? ' active' : ''}">Войти</a>
-                <a href="/registration" th:class="a-button + ${nav == 'registration' ? ' active' : ''}">Регистрация</a>
+                <a href="/login" th:class="a-button + ${nav == 'login' ? ' active' : ''}">Вход</a>
+                <a href="/registration"
+                   th:class="a-button + ${nav == 'registration' ? ' active' : ''}">Регистрация</a>
             </div>
-        </div>
+        </th:block>
     </header>
 </th:block>
 </body>

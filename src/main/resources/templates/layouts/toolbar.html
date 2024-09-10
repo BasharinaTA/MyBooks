@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<th:block th:fragment="toolbarBookLayout (year)">
+    <div class="toolbar">
+        <div class="year">
+            <a th:href="@{'/profile/books/' + ${year - 1}}"><img src="/img/icons/arrow/arrow-left.png"
+                                                                 alt="Стрелка влево"></a>
+            <span th:text="${year}"></span>
+            <a th:href="@{'/profile/books/' + ${year + 1}}"><img src="/img/icons/arrow/arrow-right.png"
+                                                                 alt="Стрелка вправо"></a>
+        </div>
+        <form method="post"
+              th:action="@{'/book/' + ${year} + '/form/add'}"
+              class="form-add">
+            <input type="submit" value="Добавить">
+        </form>
+    </div>
+</th:block>
+
+<th:block th:fragment="toolbarPlanBookLayout (search)">
+    <div class="toolbar">
+        <form class="form-search"
+              method="get"
+              action="/profile/books/plan/search">
+            <input type="text" placeholder="Название" name="search" th:value="${search != null ? search : null}">
+            <input type="submit" value="Поиск">
+        </form>
+        <form method="post"
+              action="/book/form/plan/add"
+        class="form-add">
+            <input type="submit" value="Добавить">
+        </form>
+    </div>
+</th:block>
+
+<th:block th:fragment="toolbarReportLayout (name, reports)">
+    <div class="toolbar">
+        <div></div>
+        <div class="dropdown">
+            <input type="text"
+                   class="dropdown-input hide">
+            <button class="dropdown-button" th:text="${name}"></button>
+            <ul class="dropdown-list hide">
+                <li th:each="report : ${reports}" class="dropdown-list-item"><a
+                        th:href="@{'/profile/books/' + ${report.getUrl()}}" th:text="${report.getName()}"></a></li>
+            </ul>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:fragment="toolbarAdminLayout (search)">
+    <div class="toolbar">
+        <form class="form-search"
+              method="get"
+              action="/admin/search">
+            <input type="text" placeholder="Логин" name="search" th:value="${search != null ? search : null}">
+            <input type="submit" value="Поиск">
+        </form>
+    </div>
+</th:block>
+</body>
+</html>

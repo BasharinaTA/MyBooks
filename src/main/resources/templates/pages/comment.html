@@ -14,10 +14,8 @@
 <th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
 <main>
     <div class="container">
-        <th:block th:if="${nav == 'book'}" th:insert="~{layouts/form.html::formSaveBookLayout (${nav}, ${year}, ${types}, ${genres}, ${book})}"></th:block>
-        <th:block th:if="${nav == 'plan'}" th:insert="~{layouts/form.html::formSavePlanBookLayout (${nav}, ${types}, ${genres}, ${book})}"></th:block>
+        <th:block th:insert="~{layouts/form.html::formCommentLayout (${year}, ${book}, ${comment})}"></th:block>
     </div>
 </main>
-<script src="/js/dropdown.js"></script>
 </body>
 </html>

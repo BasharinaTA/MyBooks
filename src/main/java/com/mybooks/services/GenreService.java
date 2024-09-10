@@ -1,12 +1,12 @@
 package com.mybooks.services;
 
-import com.mybooks.repositories.GenreRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.mybooks.model.entities.Genre;
 
-@Service
-@AllArgsConstructor
-public class GenreService {
+import java.util.List;
 
-    private GenreRepository genreRepository;
+public interface GenreService {
+
+    Genre getById(Integer id);
+
+    List<Genre> getAllByOrderByName();
 }

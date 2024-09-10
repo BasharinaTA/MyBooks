@@ -1,5 +1,6 @@
 package com.mybooks.services;
 
+import com.mybooks.exceptions.BaseException;
 import com.mybooks.model.entities.Book;
 import com.mybooks.model.entities.Profile;
 import com.mybooks.model.entities.User;
@@ -18,15 +19,20 @@ public class ProfileServiceImpl implements ProfileService {
     private UserService userService;
 
     @Override
-    public Profile get(Integer id) {
+    public Profile getById(Integer id) {
         return profileRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("Профиль не существует"));
+                new BaseException("Профиль с указанным id не существует"));
+    }
+
+    @Override
+    public List<Profile> getAllByOrderBySurname() {
+        return profileRepository.findAllByOrderBySurname();
     }
 
     @Override
     public Profile getByUser(User user) {
         return profileRepository.findByUser(user).orElseThrow(() ->
-                new RuntimeException("Профиль не существует"));
+                new BaseException("Профиль для указанного пользователя не существует"));
     }
 
     @Override
@@ -50,8 +56,7 @@ public class ProfileServiceImpl implements ProfileService {
     public List<Book> getPlannedBooks(Profile profile) {
         return profile.getBooks()
                 .stream()
-                .filter(b -> b.getDateStart() == null
-                        && b.getDateFinish() == null)
+                .filter(b -> b.getDateStart() == null)
                 .sorted(Comparator.comparing(Book::getCreated, Comparator.reverseOrder()))
                 .toList();
     }
@@ -61,8 +66,9 @@ public class ProfileServiceImpl implements ProfileService {
         return profile.getBooks()
                 .stream()
                 .filter(b -> b.getDateStart() == null
-                        && b.getDateFinish() == null
+//                        && b.getDateFinish() == null
                         && b.getName().toLowerCase().contains(name.toLowerCase()))
+                .sorted(Comparator.comparing(Book::getCreated, Comparator.reverseOrder()))
                 .toList();
     }
 
@@ -84,6 +90,7 @@ public class ProfileServiceImpl implements ProfileService {
                         || (b.getDateStart() != null && b.getDateStart().after(new Date()))
                         || (b.getDateFinish() != null && b.getDateFinish().after(new Date()))
                         || (b.getDateStart() != null && b.getDateFinish() != null && b.getDateStart().after(b.getDateFinish())))
+                .sorted(Comparator.comparing(Book::getDateStart, Comparator.nullsLast(Comparator.reverseOrder())))
                 .toList();
     }
 
@@ -124,6 +131,14 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setName(name);
         profile.setSurname(surname);
         return profileRepository.save(profile);
+    }
+
+    @Override
+    public List<Profile> getAllByUsername(String username) {
+        return profileRepository.findAllByOrderBySurname()
+                .stream()
+                .filter(p -> p.getUser().getUsername().toLowerCase().contains(username.toLowerCase()))
+                .toList();
     }
 
     private static List<Book> getVerifiedBooks(Profile profile) {

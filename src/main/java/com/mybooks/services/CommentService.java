@@ -1,13 +1,12 @@
 package com.mybooks.services;
 
-import com.mybooks.model.entities.Book;
 import com.mybooks.model.entities.Comment;
-
-import javax.persistence.criteria.CriteriaBuilder;
 
 public interface CommentService {
 
-    Comment getCommentById(Integer id);
+    Comment getById(Integer id);
 
-    Comment save(String text);
+    Comment save(String text, Integer id);
+
+    Comment update(Comment comment, String text);
 }

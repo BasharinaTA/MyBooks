@@ -33,6 +33,6 @@ public class Profile {
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy="profile")
+    @OneToMany(mappedBy="profile", cascade=CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
 }

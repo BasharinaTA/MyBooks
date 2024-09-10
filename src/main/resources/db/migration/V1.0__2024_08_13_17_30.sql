@@ -31,7 +31,7 @@ CREATE TABLE books
     date_start  DATE,
     date_finish DATE,
     type        VARCHAR(15),
-    created     DATE         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     genre_id    INTEGER REFERENCES genres (id),
     profile_id  INTEGER REFERENCES profiles (id)
 );
@@ -40,8 +40,63 @@ CREATE TABLE comments
 (
     id      SERIAL PRIMARY KEY,
     text    VARCHAR(500),
-    rate    BOOLEAN,
-    created DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     book_id INTEGER REFERENCES books (id)
---     profile_id INTEGER REFERENCES profiles (id)
 );
+
+INSERT INTO genres (name)
+VALUES ('Бизнес-литература');
+INSERT INTO genres (name)
+VALUES ('Детектив');
+INSERT INTO genres (name)
+VALUES ('Детская литература');
+INSERT INTO genres (name)
+VALUES ('Изучение языков');
+INSERT INTO genres (name)
+VALUES ('Искусство и культура');
+INSERT INTO genres (name)
+VALUES ('История');
+INSERT INTO genres (name)
+VALUES ('Компьютерная литература');
+INSERT INTO genres (name)
+VALUES ('Красота и здоровье');
+INSERT INTO genres (name)
+VALUES ('Мемуары');
+INSERT INTO genres (name)
+VALUES ('Научная литература');
+INSERT INTO genres (name)
+VALUES ('Научная фантастика');
+INSERT INTO genres (name)
+VALUES ('Научно-популярная литература');
+INSERT INTO genres (name)
+VALUES ('Общество');
+INSERT INTO genres (name)
+VALUES ('Повесть');
+INSERT INTO genres (name)
+VALUES ('Поэзия');
+INSERT INTO genres (name)
+VALUES ('Поэма');
+INSERT INTO genres (name)
+VALUES ('Приключения');
+INSERT INTO genres (name)
+VALUES ('Проза');
+INSERT INTO genres (name)
+VALUES ('Психология');
+INSERT INTO genres (name)
+VALUES ('Пьеса');
+INSERT INTO genres (name)
+VALUES ('Рассказ');
+INSERT INTO genres (name)
+VALUES ('Роман');
+INSERT INTO genres (name)
+VALUES ('Триллер');
+INSERT INTO genres (name)
+VALUES ('Ужасы');
+INSERT INTO genres (name)
+VALUES ('Фантастика');
+INSERT INTO genres (name)
+VALUES ('Фантастическая повесть');
+INSERT INTO genres (name)
+VALUES ('Фэнтези');
+INSERT INTO genres (name)
+VALUES ('Хобби и досуг');

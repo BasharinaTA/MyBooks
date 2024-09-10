@@ -20,22 +20,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private UserDetailsService userDetailsService;
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers(
-//                new AntPathRequestMatcher("/css/*.css"),
-//                new AntPathRequestMatcher("/img/**"),
-//                new AntPathRequestMatcher("/js/*.js")
-//        );
-//    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/books/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/css/**", "/img/**", "/js/**").permitAll()
+                .antMatchers("/", "/registration", "/user/**").permitAll()
+                .antMatchers("/books/**", "/comment/**", "/profile/**").hasAnyRole("ADMIN", "USER")
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -53,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(provider());
+//        auth.userDetailsService(userDetailsService).passwordEncoder(encoder());
     }
 
     @Bean

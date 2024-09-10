@@ -3,7 +3,6 @@ package com.mybooks.model.entities;
 import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -43,9 +42,13 @@ public class Book {
     private Date created;
 
     @ManyToOne
+    @JoinColumn(name="genre_id")
+    private Genre genre;
+
+    @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    @OneToOne(mappedBy="book")
+    @OneToOne(mappedBy="book", cascade=CascadeType.ALL)
     private Comment comment;
 }

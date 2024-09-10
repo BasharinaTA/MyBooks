@@ -3,6 +3,8 @@ package com.mybooks.model.entities;
 import javax.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -17,4 +19,7 @@ public class Genre {
 
     @Column(name="name")
     private String name;
+
+    @OneToMany(mappedBy="genre")
+    private List<Book> book;
 }
