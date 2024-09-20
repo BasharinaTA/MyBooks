@@ -21,44 +21,38 @@
             </colgroup>
             <thead>
             <tr>
-                <th hidden>id</th>
                 <th>Начало</th>
                 <th>Тип</th>
                 <th>Жанр</th>
                 <th>Автор</th>
                 <th>Название</th>
                 <th colspan="2">Завершение</th>
-                <th hidden></th>
-                <th hidden></th>
                 <th>Действия</th>
             </tr>
             </thead>
             <th:block th:if="${!books.isEmpty()}">
                 <tbody>
                 <tr th:each="book : ${books}">
-                    <td th:text="${book.getId()}" hidden></td>
                     <td th:text="${#dates.monthName(book.getDateStart())}"></td>
                     <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}"
-                        class="text-align-center">
-                        <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
+                    class="text-align-center">
+                    <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
                     </td>
                     <td th:if="${book.getType() == 'Бумажная'}" th:title="${book.getType()}" class="text-align-center">
-                        <img src="/img/icons/book/type/book.png" th:alt="${book.getType()}">
+                    <img src="/img/icons/book/type/book.png" th:alt="${book.getType()}">
                     </td>
                     <td th:if="${book.getType() == 'Электронная'}" th:title="${book.getType()}"
-                        class="text-align-center">
-                        <img src="/img/icons/book/type/ebook.png" th:alt="${book.getType()}">
+                    class="text-align-center">
+                    <img src="/img/icons/book/type/ebook.png" th:alt="${book.getType()}">
                     </td>
                     <td th:text="${book.getGenre().getName()}"></td>
                     <td th:text="${book.getAuthor()}"></td>
                     <td th:text="${book.getName()}"></td>
                     <td th:text="${#dates.monthName(book.getDateFinish())}"></td>
                     <td th:text="${#dates.year(book.getDateFinish())}" class="text-align-center"></td>
-                    <td hidden th:text="${#dates.format(book.getDateStart(), 'yyyy-MM-dd')}"></td>
-                    <td hidden th:text="${#dates.format(book.getDateFinish(), 'yyyy-MM-dd')}"></td>
                     <td>
                         <div class="action">
-                            <th:bock th:if="${book.getDateFinish() == null}">
+                            <th:block th:if="${book.getDateFinish() == null}">
                                 <form
                                         method="post"
                                         th:action="@{${'/book/updateDateFinish/' + year + '/' + book.getId()}}">
@@ -68,7 +62,7 @@
                                            title="Завершить чтение"
                                            class="button">
                                 </form>
-                            </th:bock>
+                            </th:block>
                             <th:block th:unless="${book.getDateFinish() == null}">
                                 <form
                                         method="get"
@@ -104,7 +98,7 @@
             </th:block>
         </table>
         <th:block th:if="${books.isEmpty()}">
-            <div class="empty">Список пуст</div>
+            <div class="empty">Список пустой</div>
         </th:block>
     </div>
 </th:block>
@@ -124,7 +118,6 @@
             </colgroup>
             <thead>
             <tr>
-                <th hidden>Id</th>
                 <th colspan="2">Добавлена</th>
                 <th>Тип</th>
                 <th>Жанр</th>
@@ -136,7 +129,6 @@
             <th:block th:unless="${books.isEmpty()}">
                 <tbody>
                 <tr th:each="book : ${books}">
-                    <td hidden th:text="${book.getId()}"></td>
                     <td th:text="${#dates.monthName(book.getCreated())}"></td>
                     <td th:text="${#dates.year(book.getCreated())}" class="text-align-center"></td>
                     <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}"
@@ -188,7 +180,7 @@
             </th:block>
         </table>
         <th:block th:if="${books.isEmpty()}">
-            <div class="empty">Список пуст</div>
+            <div class="empty">Список пустой</div>
         </th:block>
     </div>
 </th:block>
@@ -243,18 +235,17 @@
             </th:block>
         </table>
         <th:block th:if="${books.isEmpty()}">
-            <div class="empty">Список пуст</div>
+            <div class="empty">Список пустой</div>
         </th:block>
     </div>
 </th:block>
 
-<th:block th:fragment="adminLayout (profiles, roles, statuses)">
+<th:block th:fragment="adminLayout (users, roles, statuses)">
     <th:block th:insert="~{layouts/toolbar.html::toolbarAdminLayout (${search})}"></th:block>
     <div class="scroll-table">
         <table>
             <colgroup>
-                <col span="6" class="col-percent-6">
-                <col class="col-percent-4">
+                <col span="7" class="col-percent-4">
             </colgroup>
             <thead>
             <tr>
@@ -266,33 +257,50 @@
                 <th>Действия</th>
             </tr>
             </thead>
+            <th:block th:unless="${users.isEmpty()}">
             <tbody>
-            <tr th:each="profile : ${profiles}">
-                <td th:text="${#dates.format(profile.getUser().getCreated(), 'dd.MM.yyyy')}"
+            <tr th:each="user : ${users}">
+                <td th:text="${#dates.format(user.getCreated(), 'dd.MM.yyyy')}"
                     class="text-align-center"></td>
-                <td th:text="${profile.getSurname()}"></td>
-                <td th:text="${profile.getName()}"></td>
-                <td th:text="${profile.getUser().getUsername()}">
+                <td th:text="${user.getProfile().getSurname()}"></td>
+                <td th:text="${user.getProfile().getName()}"></td>
+                <td th:text="${user.getUsername()}">
                 </td>
-                <td th:text="${profile.getUser().getRole()}">
+                <td th:text="${user.getRole()}">
                 </td>
-                <td th:text="${profile.getUser().getStatus()}">
+                <td th:text="${user.getStatus()}">
                 </td>
                 <td>
                     <div class="action">
+                        <th:block th:if="${user.getStatus().name() == 'INACTIVE'}">
+                            <form method="post"
+                                  th:action="@{'/admin/unblock/user/' + ${user.getId()}}">
+                                <input type="image" src="/img/icons/user/lock.png" title="Разблокировать" class="button">
+                            </form>
+                        </th:block>
+                        <th:block th:if="${user.getStatus().name() != 'INACTIVE'}">
+                            <form method="post"
+                                  th:action="@{'/admin/block/user/' + ${user.getId()}}">
+                                <input type="image" src="/img/icons/user/light-lock.png" title="Заблокировать" class="button">
+                            </form>
+                        </th:block>
                         <form method="get"
-                              th:action="@{'/admin/user/' + ${profile.getUser().getId()}}">
-                            <input type="image" src="/img/icons/user/edit.png" title="Редактировать" class="button">
+                              th:action="@{'/admin/user/' + ${user.getId()}}">
+                            <input type="image" src="/img/icons/user/setting.png" title="Редактировать" class="button">
                         </form>
                         <form method="post"
-                              th:action="@{'/admin/user/delete/' + ${profile.getUser().getId()}}">
+                              th:action="@{'/admin/user/delete/' + ${user.getId()}}">
                             <input type="image" src="/img/icons/user/delete.png" title="Удалить" class="button">
                         </form>
                     </div>
                 </td>
             </tr>
             </tbody>
+            </th:block>
         </table>
+        <th:block th:if="${users.isEmpty()}">
+            <div class="empty">Список пустой</div>
+        </th:block>
     </div>
 </th:block>
 </body>

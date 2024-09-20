@@ -11,8 +11,6 @@ public interface ProfileService {
 
     Profile getById(Integer id);
 
-    List<Profile> getAllByOrderBySurname();
-
     Profile getByUser(User user);
 
     Profile getProfileByPrincipal(Principal principal);
@@ -31,9 +29,7 @@ public interface ProfileService {
 
     List<Book> getBooksThisYearRead(Profile profile);
 
-    Profile save(Profile profile);
+    Profile save(String username, String password, String name, String surname);
 
     Profile update(Profile profile, String name, String surname);
-
-    List<Profile> getAllByUsername(String username);
 }

@@ -19,7 +19,7 @@
                   th:insert="~{layouts/table.html::planBookLayout (${name}, ${books})}"></th:block>
         <th:block th:if="${nav == 'info'}" th:insert="~{layouts/table.html::reportLayout (${books})}"></th:block>
         <th:block th:if="${nav == 'admin'}"
-                  th:insert="~{layouts/table.html::adminLayout (${profiles}, ${roles}, ${statuses})}"></th:block>
+                  th:insert="~{layouts/table.html::adminLayout (${users}, ${roles}, ${statuses})}"></th:block>
     </div>
 </main>
 <script src="/js/dropdown.js"></script>

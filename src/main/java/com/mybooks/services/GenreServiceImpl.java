@@ -16,7 +16,8 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Genre getById(Integer id) {
-        return genreRepository.findById(id).orElseThrow(() -> new BaseException("Жанр с указанным id не существует"));
+        return genreRepository.findById(id).orElseThrow(() ->
+                new BaseException("Жанр с указанным id не существует"));
     }
 
     @Override

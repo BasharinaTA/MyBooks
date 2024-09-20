@@ -16,7 +16,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getById(Integer id) {
-        return bookRepository.findById(id).orElseThrow(() -> new BaseException("Книги с указанным id не существует"));
+        return bookRepository.findById(id).orElseThrow(() ->
+                new BaseException("Книги с указанным id не существует"));
     }
 
     @Override

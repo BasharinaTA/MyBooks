@@ -3,7 +3,6 @@ package com.mybooks.controllers;
 import com.mybooks.model.entities.Role;
 import com.mybooks.model.entities.Status;
 import com.mybooks.model.entities.User;
-import com.mybooks.services.ProfileService;
 import com.mybooks.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,14 +17,12 @@ public class AdminController {
     public static final String PAGES_ADMIN = "pages/main";
     public static final String PAGES_USER = "pages/user";
     public static final String REDIRECT_ADMIN = "redirect:/admin";
-    private ProfileService profileService;
     private UserService userService;
-
 
     @GetMapping()
     public String getUsers(Model model) {
         model.addAttribute("nav", "admin");
-        model.addAttribute("profiles", profileService.getAllByOrderBySurname());
+        model.addAttribute("users", userService.getAllByOrderBySurnameAndName());
         return PAGES_ADMIN;
     }
 
@@ -33,10 +30,23 @@ public class AdminController {
     public String getUsers(Model model, @RequestParam String search) {
         model.addAttribute("nav", "admin");
         model.addAttribute("search", search);
-        model.addAttribute("profiles", profileService.getAllByUsername(search));
+        model.addAttribute("users", userService.getAllByUsernameOrderBySurnameAndName(search));
         return PAGES_ADMIN;
     }
 
+    @PostMapping("/block/user/{id}")
+    public String blockUser(Model model, @PathVariable Integer id) {
+        model.addAttribute("nav", "admin");
+        userService.blockUser(id);
+        return REDIRECT_ADMIN;
+    }
+
+    @PostMapping("/unblock/user/{id}")
+    public String unblockUser(Model model, @PathVariable Integer id) {
+        model.addAttribute("nav", "admin");
+        userService.unblockUser(id);
+        return REDIRECT_ADMIN;
+    }
 
     @GetMapping("/user/{id}")
     public String getUser(Model model, @PathVariable Integer id) {

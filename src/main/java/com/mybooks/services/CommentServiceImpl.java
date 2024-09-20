@@ -16,7 +16,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment getById(Integer id) {
-        return commentRepository.findById(id).orElseThrow(() -> new BaseException("Комментария с указанным id не существует"));
+        return commentRepository.findById(id).orElseThrow(() ->
+                new BaseException("Комментария с указанным id не существует"));
     }
 
     @Override

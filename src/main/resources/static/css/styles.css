@@ -185,7 +185,7 @@ textarea,
 
 @media (min-width: 1410px) and (max-width: 1800px) {
     .scroll-table {
-        height: 506px;
+        height: 519px;
     }
 }
 
@@ -245,7 +245,6 @@ table {
     text-align: center;
     background-color: #d1ca9d;
     color: #6d6500;
-    /*color: #524d0a;*/
 }
 
 .scroll-table tbody td {
@@ -272,7 +271,6 @@ table {
     width: 7%;
     border-left: 1px solid #968f10;
     border-right: 1px solid #968f10;
-
 }
 
 .col-percent-12 {
@@ -295,6 +293,9 @@ table {
 label {
     display: flex;
     flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    padding-top: 12px;
 }
 
 .empty {
@@ -306,7 +307,7 @@ label {
 .toolbar {
     display: flex;
     justify-content: space-between;
-    margin: 0 5px 20px;
+    margin: 0 5px 15px;
 }
 
 .year {
@@ -328,14 +329,6 @@ label {
 
 h3 {
     margin: 0;
-}
-
-label {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: 100%;
-    padding-top: 12px;
 }
 
 span {
@@ -380,7 +373,6 @@ image {
     color: #f31c00;
     text-align: right;
 }
-
 
 ::placeholder {
     color: #524d0a;
@@ -463,11 +455,6 @@ td .dropdown-list-item {
     background-color: #cdc7518a;
 }
 
-/*Убрать полосу прокрутки для всей страницы*/
-/*::-webkit-scrollbar {*/
-/*    width: 0;*/
-/*}*/
-
 /* Стили для скролла */
 ::-webkit-scrollbar {
     width: 10px;
@@ -479,9 +466,4 @@ td .dropdown-list-item {
 
 ::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-}
-
-a img {
-    width: 24px;
-    height: 24px;
 }

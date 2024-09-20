@@ -67,12 +67,6 @@
                                required>
                     </label>
                     <label><span>Название</span>
-                        <!--                        <textarea th:field="*{name}"-->
-                        <!--                                  th:value="${book.getName()}"-->
-                        <!--                                  name="name"-->
-                        <!--                                  maxlength="200"-->
-                        <!--                                  required>-->
-                        <!--                        </textarea>-->
                         <input type="text"
                                th:field="*{name}"
                                th:value="${book.getName()}"
@@ -169,6 +163,22 @@
                    maxlength="200"
                    required>
         </label>
+        <th:block th:if="${book.getId() != null}">
+            <div class="date">
+                <label><span>Начало</span>
+                    <input type="date"
+                           th:field="*{dateStart}"
+                           th:value="${book.getDateStart()}"
+                           name="start">
+                </label>
+                <label><span>Завершение</span>
+                    <input type="date"
+                           th:field="*{dateFinish}"
+                           th:value="${book.getDateFinish()}"
+                           name="finish">
+                </label>
+            </div>
+        </th:block>
         <div class="buttons">
             <a href="/profile/books/plan" class="form-button align-center">Отмена</a>
             <input type="submit" value="Сохранить">
@@ -188,11 +198,10 @@
             <input type="text" th:value="${book.getAuthor()}" disabled>
         </label>
         <label><span>Название</span>
-            <!--            <textarea rows="2" th:text="${book.getName()}" disabled></textarea>-->
             <input type="text" th:value="${book.getName()}" disabled>
         </label>
         <label><span>Комментарий</span>
-            <textarea rows="2" th:text="${comment.getText()}" name="text"></textarea>
+            <textarea rows="2" th:text="${comment.getText()}" name="text" required></textarea>
         </label>
         <div class="buttons">
             <a th:href="@{'/profile/books/' + ${year}}" class="form-button align-center">Отмена</a>

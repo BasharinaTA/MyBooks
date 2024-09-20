@@ -1,18 +1,13 @@
 package com.mybooks.controllers;
 
-import com.mybooks.model.entities.Profile;
-import com.mybooks.model.entities.Role;
-import com.mybooks.model.entities.Status;
 import com.mybooks.model.entities.User;
 import com.mybooks.services.ProfileService;
 import com.mybooks.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Controller
@@ -44,18 +39,7 @@ public class UserController {
             ra.addFlashAttribute("username", username);
             return REDIRECT_REGISTRATION;
         }
-        User userToSave = userService.save(User.builder()
-                .username(username)
-                .password(new BCryptPasswordEncoder(12).encode(password))
-                .created(new Date())
-                .role(Role.ROLE_USER)
-                .status((Status.ACTIVE))
-                .build());
-        profileService.save(Profile.builder()
-                .name(name)
-                .surname(surname)
-                .user(userToSave)
-                .build());
+        profileService.save(username, password, name, surname);
         return REDIRECT_LOGIN;
     }
 }

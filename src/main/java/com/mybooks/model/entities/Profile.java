@@ -34,5 +34,5 @@ public class Profile {
     private User user;
 
     @OneToMany(mappedBy="profile", cascade=CascadeType.ALL)
-    private List<Book> books = new ArrayList<>();
+    private List<Book> books;
 }

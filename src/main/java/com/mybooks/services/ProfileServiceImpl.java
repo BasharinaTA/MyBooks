@@ -1,13 +1,13 @@
 package com.mybooks.services;
 
 import com.mybooks.exceptions.BaseException;
-import com.mybooks.model.entities.Book;
-import com.mybooks.model.entities.Profile;
-import com.mybooks.model.entities.User;
+import com.mybooks.model.entities.*;
 import com.mybooks.repositories.ProfileRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.security.Principal;
 import java.util.*;
 
@@ -22,11 +22,6 @@ public class ProfileServiceImpl implements ProfileService {
     public Profile getById(Integer id) {
         return profileRepository.findById(id).orElseThrow(() ->
                 new BaseException("Профиль с указанным id не существует"));
-    }
-
-    @Override
-    public List<Profile> getAllByOrderBySurname() {
-        return profileRepository.findAllByOrderBySurname();
     }
 
     @Override
@@ -48,7 +43,8 @@ public class ProfileServiceImpl implements ProfileService {
                 .stream()
                 .filter(b -> b.getDateStart() != null
                         && b.getDateStart().getYear() + 1900 == year)
-                .sorted(Comparator.comparing(Book::getDateStart))
+                .sorted(Comparator.comparing(Book::getDateStart)
+                        .thenComparing(Book::getId))
                 .toList();
     }
 
@@ -66,7 +62,6 @@ public class ProfileServiceImpl implements ProfileService {
         return profile.getBooks()
                 .stream()
                 .filter(b -> b.getDateStart() == null
-//                        && b.getDateFinish() == null
                         && b.getName().toLowerCase().contains(name.toLowerCase()))
                 .sorted(Comparator.comparing(Book::getCreated, Comparator.reverseOrder()))
                 .toList();
@@ -122,7 +117,20 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Profile save(Profile profile) {
+    @Transactional
+    public Profile save(String username, String password, String name, String surname) {
+        User user = userService.save(User.builder()
+                .username(username)
+                .hashPassword(new BCryptPasswordEncoder(12).encode(password))
+                .created(new Date())
+                .role(Role.ROLE_USER)
+                .status((Status.ACTIVE))
+                .build());
+        Profile profile = Profile.builder()
+                .name(name)
+                .surname(surname)
+                .user(user)
+                .build();
         return profileRepository.save(profile);
     }
 
@@ -131,14 +139,6 @@ public class ProfileServiceImpl implements ProfileService {
         profile.setName(name);
         profile.setSurname(surname);
         return profileRepository.save(profile);
-    }
-
-    @Override
-    public List<Profile> getAllByUsername(String username) {
-        return profileRepository.findAllByOrderBySurname()
-                .stream()
-                .filter(p -> p.getUser().getUsername().toLowerCase().contains(username.toLowerCase()))
-                .toList();
     }
 
     private static List<Book> getVerifiedBooks(Profile profile) {

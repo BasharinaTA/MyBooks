@@ -34,8 +34,8 @@ public class Book {
     private Date dateFinish;
 
     @Column(name = "type")
-//    @Enumerated(EnumType.STRING)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     @CreationTimestamp
     @Column(name="created")
@@ -51,4 +51,12 @@ public class Book {
 
     @OneToOne(mappedBy="book", cascade=CascadeType.ALL)
     private Comment comment;
+
+    public String getType() {
+        return type.getDescription();
+    }
+
+    public void setType(String type) {
+        this.type = Type.fromDescription(type);
+    }
 }
