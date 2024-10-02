@@ -9,13 +9,13 @@
     <header>
         <th:block sec:authorize="isAuthenticated()">
             <nav>
-                <a href="/profile/books" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'book' ? 'active' : null}">Книги</a>
-                <a href="/profile/books/plan" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'plan' ? 'active' : null}">Планы</a>
-                <a href="/profile/books/notRead" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'info' ? 'active' : null}">Информация</a>
-                <a href="/admin" sec:authorize="hasRole('ADMIN')" th:class="${nav == 'admin' ? 'active' : null}">Управление</a>
+                <a href="/books" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'book' ? 'active' : null}">Книги</a>
+                <a href="/books/plan" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'plan' ? 'active' : null}">Планы</a>
+                <a href="/books/notRead" sec:authorize="hasAnyRole('ADMIN', 'USER')" th:class="${nav == 'info' ? 'active' : null}">Информация</a>
+                <a href="/admin/users" sec:authorize="hasRole('ADMIN')" th:class="${nav == 'admin' ? 'active' : null}">Управление</a>
             </nav>
             <div>
-                <a href="/profile" sec:authentication="name"  th:class="a-button + ${nav == 'profile' ? ' active' : ''}"></a>
+                <a href="/profiles" sec:authorize="hasAnyRole('ADMIN', 'USER')" sec:authentication="name"  th:class="a-button + ${nav == 'profile' ? ' active' : ''}"></a>
             </div>
         </th:block>
 

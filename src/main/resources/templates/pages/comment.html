@@ -14,8 +14,31 @@
 <th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
 <main>
     <div class="container">
-        <th:block th:insert="~{layouts/form.html::formCommentLayout (${year}, ${book}, ${comment})}"></th:block>
+        <form th:object="${comment}" method="post"
+              th:action="@{${'/comments/' + book.getId() + (comment.getId() == null ?  '' : '/'+ comment.getId())}}"
+              class="form-save">
+            <h3 th:text="${comment.getId() == null ? 'Добавить' : 'Редактировать'} + ' комментарий'"></h3>
+            <input type="text" th:field="*{id}" th:value="${comment.getId()}" name="id" hidden>
+            <label><span>Жанр</span>
+                <input type="text" th:value="${book.getGenre().getName()}" disabled>
+            </label>
+            <label><span>Автор</span>
+                <input type="text" th:value="${book.getAuthor()}" disabled>
+            </label>
+            <label><span>Название</span>
+                <input type="text" th:value="${book.getName()}" disabled>
+            </label>
+            <label><span>Комментарий</span>
+                <textarea rows="2" th:field="*{text}" th:value="${comment.getText()}"
+                          autofocus required></textarea>
+            </label>
+            <div class="buttons">
+                <a th:href="@{${'/books/' + year}}" class="form-button align-center">Отмена</a>
+                <input type="submit" value="Сохранить">
+            </div>
+        </form>
     </div>
 </main>
+<script src="/js/focus.js"></script>
 </body>
 </html>

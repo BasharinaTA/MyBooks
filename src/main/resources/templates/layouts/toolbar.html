@@ -5,34 +5,30 @@
     <title>Title</title>
 </head>
 <body>
-<th:block th:fragment="toolbarBookLayout (year)">
+<th:block th:fragment="toolbarBooksLayout (year)">
     <div class="toolbar">
         <div class="year">
-            <a th:href="@{'/profile/books/' + ${year - 1}}"><img src="/img/icons/arrow/arrow-left.png"
-                                                                 alt="Стрелка влево"></a>
+            <a th:href="@{'/books/' + ${year - 1}}"><img src="/img/icons/arrow/arrow-left.png"
+                                                         alt="Стрелка влево"></a>
             <span th:text="${year}"></span>
-            <a th:href="@{'/profile/books/' + ${year + 1}}"><img src="/img/icons/arrow/arrow-right.png"
-                                                                 alt="Стрелка вправо"></a>
+            <a th:href="@{'/books/' + ${year + 1}}"><img src="/img/icons/arrow/arrow-right.png"
+                                                         alt="Стрелка вправо"></a>
         </div>
-        <form method="post"
-              th:action="@{'/book/' + ${year} + '/form/add'}"
-              class="form-add">
+        <form method="get" th:action="@{'/books/book/' + ${year}}" class="form-add">
             <input type="submit" value="Добавить">
         </form>
     </div>
 </th:block>
 
-<th:block th:fragment="toolbarPlanBookLayout (search)">
+<th:block th:fragment="toolbarPlannedBooksLayout (search)">
     <div class="toolbar">
-        <form class="form-search"
-              method="get"
-              action="/profile/books/plan/search">
-            <input type="text" placeholder="Название" name="search" th:value="${search != null ? search : null}">
+        <form method="get" action="/books/plan/search" class="form-search">
+            <input type="text" placeholder="Название" name="search"
+                   th:value="${search != null ? search : null}" autofocus>
             <input type="submit" value="Поиск">
         </form>
-        <form method="post"
-              action="/book/form/plan/add"
-        class="form-add">
+        <form method="get" action="/books/plan/book" class="form-add">
+            <input type="text" name="search" th:value="${search != null ? search : null}" hidden>
             <input type="submit" value="Добавить">
         </form>
     </div>
@@ -47,7 +43,7 @@
             <button class="dropdown-button" th:text="${name}"></button>
             <ul class="dropdown-list hide">
                 <li th:each="report : ${reports}" class="dropdown-list-item"><a
-                        th:href="@{'/profile/books/' + ${report.getUrl()}}" th:text="${report.getName()}"></a></li>
+                        th:href="@{'/books/'  + ${report.getUrl()}}" th:text="${report.getName()}"></a></li>
             </ul>
         </div>
     </div>
@@ -55,10 +51,9 @@
 
 <th:block th:fragment="toolbarAdminLayout (search)">
     <div class="toolbar">
-        <form class="form-search"
-              method="get"
-              action="/admin/search">
-            <input type="text" placeholder="Логин" name="search" th:value="${search != null ? search : null}">
+        <form method="get" action="/admin/users/search" class="form-search">
+            <input type="text" placeholder="Логин" name="search"
+                   th:value="${search != null ? search : null}" autofocus>
             <input type="submit" value="Поиск">
         </form>
     </div>

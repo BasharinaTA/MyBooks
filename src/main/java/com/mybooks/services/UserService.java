@@ -1,7 +1,5 @@
 package com.mybooks.services;
 
-import com.mybooks.model.entities.Role;
-import com.mybooks.model.entities.Status;
 import com.mybooks.model.entities.User;
 
 import java.util.List;
@@ -15,17 +13,17 @@ public interface UserService {
 
     Optional<User> getByUser(String name);
 
-    List<User> getAllByOrderBySurnameAndName();
+    List<User> getAllOrderByName();
 
-    List<User> getAllByUsernameOrderBySurnameAndName(String username);
+    List<User> getAllByUsernameOrderByName(String username);
 
     User save(User user);
 
-    User update(User user, Role role, Status status);
+    User update(Integer id, String role, String status);
 
     void delete(Integer id);
 
-    User blockUser(Integer id);
+    void block(Integer id);
 
-    User unblockUser(Integer id);
+    void unblock(Integer id);
 }

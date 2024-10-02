@@ -1,51 +1,69 @@
 package com.mybooks.controllers;
 
+import com.mybooks.model.entities.Book;
 import com.mybooks.model.entities.Comment;
+import com.mybooks.model.entities.Profile;
 import com.mybooks.services.BookService;
 import com.mybooks.services.CommentService;
+import com.mybooks.services.ProfileService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 import static com.mybooks.controllers.BookController.REDIRECT_BOOKS;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/comment")
+@RequestMapping("/comments")
 public class CommentController {
 
     public static final String PAGES_COMMENT = "pages/comment";
     private CommentService commentService;
     private BookService bookService;
+    private ProfileService profileService;
 
-    @GetMapping("/form/{year}/{bookId}")
-    public String formComment(Model model, @PathVariable Integer year, @PathVariable Integer bookId) {
+    @GetMapping("/{bookId}")
+    public String getComment(Principal principal, @PathVariable Integer bookId, Model model) {
+        Profile profile = profileService.getByPrincipal(principal);
+        Book book = bookService.getByIdAndProfile(bookId, profile);
         model.addAttribute("nav", "book");
-        model.addAttribute("year", year);
-        model.addAttribute("book", bookService.getById(bookId));
+        model.addAttribute("year", book.getDateStart().getYear() + 1900);
+        model.addAttribute("book", book);
         model.addAttribute("comment", new Comment());
         return PAGES_COMMENT;
     }
 
-    @GetMapping("/form/{year}/{bookId}/{commentId}")
-    public String formComment(Model model, @PathVariable Integer year, @PathVariable Integer bookId, @PathVariable Integer commentId) {
+    @GetMapping("/{bookId}/{commentId}")
+    public String getComment(Principal principal, @PathVariable Integer bookId,
+                             Model model, @PathVariable Integer commentId) {
+        Profile profile = profileService.getByPrincipal(principal);
+        Book book = bookService.getByIdAndProfile(bookId, profile);
         model.addAttribute("nav", "book");
-        model.addAttribute("book", bookService.getById(bookId));
-        model.addAttribute("comment", commentService.getById(commentId));
+        model.addAttribute("year", book.getDateStart().getYear() + 1900);
+        model.addAttribute("book", book);
+        model.addAttribute("comment", commentService.getByIdAndBook(commentId, book));
         return PAGES_COMMENT;
     }
 
-    @PostMapping("/{year}/save/{commentId}")
-    public String addNewComment(@RequestParam String text, @PathVariable Integer year, @PathVariable Integer commentId) {
-        commentService.save(text, commentId);
+    @PostMapping("/{bookId}")
+    public String addComment(Principal principal, @PathVariable Integer bookId, Comment comment) {
+        Profile profile = profileService.getByPrincipal(principal);
+        Book book = bookService.getByIdAndProfile(bookId, profile);
+        commentService.save(comment, book);
+        int year = book.getDateStart().getYear() + 1900;
         return REDIRECT_BOOKS + year;
     }
 
-    @PostMapping("/{year}/update/{commentId}")
-    public String updateComment(@PathVariable Integer year, @PathVariable Integer commentId, @RequestParam String text) {
-        Comment comment = commentService.getById(commentId);
-        commentService.update(comment, text);
+    @PostMapping("/{bookId}/{commentId}")
+    public String updateComment(Principal principal, @PathVariable Integer bookId,
+                                @PathVariable Integer commentId, @RequestParam String text) {
+        Profile profile = profileService.getByPrincipal(principal);
+        Book book = bookService.getByIdAndProfile(bookId, profile);
+        commentService.update(commentId, book, text);
+        int year = book.getDateStart().getYear() + 1900;
         return REDIRECT_BOOKS + year;
     }
 }

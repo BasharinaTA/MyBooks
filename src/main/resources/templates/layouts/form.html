@@ -5,32 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-<th:block th:fragment="formSaveBookLayout (nav, year, types, genres, book)">
-    <form method="post"
-          th:object="${book}"
-          th:action="@{${'/book/' + year + (book.getId() == null ?'/save' : '/update/' + book.getId())}}"
+<th:block th:fragment="formBookLayout (nav, year, types, genres, book)">
+    <form th:object="${book}" method="post"
+          th:action="@{${'/books/' + (book.getId() == null ? '' : book.getId() + '/') + year}}"
           class="form-save size">
         <div>
             <h3 th:text="${book.getId() == null ? 'Добавить' : 'Редактировать'} + ' книгу'"></h3>
-            <label class="hide"><span>id:</span>
-                <input type="text" th:field="*{id}" th:value="${book.getId()}" name="id">
-            </label>
+            <input type="text" th:field="*{id}" th:value="${book.getId()}" name="id" hidden>
             <div>
                 <div>
                     <label><span>Тип</span>
                         <div class="dropdown">
-                            <input type="text"
-                                   th:field="*{type}"
-                                   th:value="${book.getType()}"
-                                   class="dropdown-input hide"
-                                   name="type">
-                            <button type="button"
-                                    class="dropdown-button"
+                            <input type="text" th:field="*{type}" th:value="${book.getType()}"
+                                   class="dropdown-input hide">
+                            <button type="button" class="dropdown-button"
                                     th:text="${book.getType()}">
                             </button>
                             <ul class="dropdown-list hide">
-                                <li th:each="type : ${types}"
-                                    class="dropdown-list-item"
+                                <li th:each="type : ${types}" class="dropdown-list-item"
                                     th:text="${type.getDescription()}"
                                     th:data-value="${type.getDescription()}">
                                 </li>
@@ -39,12 +31,77 @@
                     </label>
                     <label><span>Жанр</span>
                         <div class="dropdown">
-                            <input type="text"
-                                   th:value="${book.getGenre().getId()}"
-                                   class="dropdown-input hide"
-                                   name="genreId">
-                            <button type="button"
-                                    class="dropdown-button"
+                            <input type="text" th:value="${book.getGenre().getId()}"
+                                   class="dropdown-input hide" name="genreId">
+                            <button type="button" class="dropdown-button"
+                                    th:text="${book.getGenre().getName()}">
+                            </button>
+                            <ul class="dropdown-list hide">
+                                <li th:each="genre : ${genres}" class="dropdown-list-item"
+                                    th:text="${genre.getName()}" th:data-value="${genre.getId()}">
+                                </li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+                <div>
+                    <label><span>Автор</span>
+                        <input type="text" th:field="*{author}" th:value="${book.getAuthor()}"
+                               maxlength="50" required>
+                    </label>
+                    <label><span>Название</span>
+                        <input type="text" th:field="*{name}" th:value="${book.getName()}"
+                               maxlength="200" required>
+                    </label>
+                </div>
+            </div>
+            <div class="date">
+                <label><span>Начало</span>
+                    <input type="date" th:field="*{dateStart}" th:value="${book.getDateStart()}">
+                </label>
+                <label><span>Завершение</span>
+                    <input type="date" th:field="*{dateFinish}" th:value="${book.getDateFinish()}">
+                </label>
+            </div>
+            <div class="buttons">
+                <a th:href="@{${'/books/' + year}}" class="form-button align-center">Отмена</a>
+                <input type="submit" value="Сохранить">
+            </div>
+        </div>
+    </form>
+</th:block>
+
+<th:block th:fragment="formPlannedBookLayout (nav, types, genres, book)">
+    <form th:object="${book}" method="post"
+          th:action="@{${'/books/plan' + (book.getId() == null ? '' : '/' + book.getId())}}"
+          class="form-save size">
+        <div>
+            <h3 th:text="${book.getId() == null ? 'Добавить' : 'Редактировать'} + ' книгу'"
+                class="form-header"></h3>
+            <input type="text" th:field="*{id}" th:value="${book.getId()}" name="id" hidden>
+            <input type="text" name="search" th:value="${search != null ? search : null}" hidden>
+            <div>
+                <div>
+                    <label><span>Тип</span>
+                        <div class="dropdown">
+                            <input type="text" th:field="*{type}" th:value="${book.getType()}"
+                                   class="dropdown-input hide">
+                            <button type="button" class="dropdown-button"
+                                    th:text="${book.getType()}">
+                            </button>
+                            <ul class="dropdown-list hide">
+                                <li th:each="type : ${types}" class="dropdown-list-item"
+                                    th:text="${type.getDescription()}"
+                                    th:data-value="${type.getDescription()}">
+                                </li>
+                            </ul>
+                        </div>
+                    </label>
+                    <label><span>Жанр</span>
+                        <div class="dropdown">
+                            <input type="text" th:value="${book.getGenre().getId()}"
+                                   class="dropdown-input hide" name="genreId">
+                            <button type="button" class="dropdown-button"
                                     th:text="${book.getGenre().getName()}">
                             </button>
                             <ul class="dropdown-list hide">
@@ -59,153 +116,29 @@
                 </div>
                 <div>
                     <label><span>Автор</span>
-                        <input type="text"
-                               th:field="*{author}"
-                               th:value="${book.getAuthor()}"
-                               name="author"
-                               maxlength="50"
-                               required>
+                        <input type="text" th:field="*{author}" th:value="${book.getAuthor()}"
+                               maxlength="50" required>
                     </label>
                     <label><span>Название</span>
-                        <input type="text"
-                               th:field="*{name}"
-                               th:value="${book.getName()}"
-                               name="name"
-                               maxlength="200"
-                               required>
+                        <input type="text" th:field="*{name}" th:value="${book.getName()}"
+                               maxlength="200" required>
                     </label>
                 </div>
             </div>
-            <div class="date">
-                <label><span>Начало</span>
-                    <input type="date"
-                           th:field="*{dateStart}"
-                           th:value="${book.getDateStart()}"
-                           name="start">
-                </label>
-                <label><span>Завершение</span>
-                    <input type="date"
-                           th:field="*{dateFinish}"
-                           th:value="${book.getDateFinish()}"
-                           name="finish">
-                </label>
-            </div>
+            <th:block th:if="${book.getId() != null}">
+                <div class="date">
+                    <label><span>Начало</span>
+                        <input type="date" th:field="*{dateStart}" th:value="${book.getDateStart()}">
+                    </label>
+                    <label><span>Завершение</span>
+                        <input type="date" th:field="*{dateFinish}" th:value="${book.getDateFinish()}">
+                    </label>
+                </div>
+            </th:block>
             <div class="buttons">
-                <a th:href="@{${'/profile/books/' + year}}" class="form-button align-center">Отмена</a>
+                <a th:href="${'/books/plan/search?search=' + search}" class="form-button align-center">Отмена</a>
                 <input type="submit" value="Сохранить">
             </div>
-        </div>
-    </form>
-</th:block>
-
-<th:block th:fragment="formSavePlanBookLayout (nav, types, genres, book)">
-    <form method="post"
-          th:object="${book}"
-          th:action="@{${'/book/plan' + (book.getId() == null ? '/save' : '/update/' + book.getId())}}"
-          class="form-save">
-        <h3 th:text="${book.getId() == null ? 'Добавить' : 'Редактировать'} + ' книгу'"
-            class="form-header"></h3>
-        <label class="hide"><span>id</span>
-            <input type="text" th:field="*{id}" th:value="${book.getId()}" name="id">
-        </label>
-        <label><span>Тип</span>
-            <div class="dropdown">
-                <input type="text"
-                       th:field="*{type}"
-                       th:value="${book.getType()}"
-                       class="dropdown-input hide"
-                       name="type">
-                <button type="button"
-                        class="dropdown-button"
-                        th:text="${book.getType()}">
-                </button>
-                <ul class="dropdown-list hide">
-                    <li th:each="type : ${types}"
-                        class="dropdown-list-item"
-                        th:text="${type.getDescription()}"
-                        th:data-value="${type.getDescription()}">
-                    </li>
-                </ul>
-            </div>
-        </label>
-        <label><span>Жанр</span>
-            <div class="dropdown">
-                <input type="text"
-                       th:value="${book.getGenre().getId()}"
-                       class="dropdown-input hide"
-                       name="genreId">
-                <button type="button"
-                        class="dropdown-button"
-                        th:text="${book.getGenre().getName()}">
-                </button>
-                <ul class="dropdown-list hide">
-                    <li th:each="genre : ${genres}"
-                        class="dropdown-list-item"
-                        th:text="${genre.getName()}"
-                        th:data-value="${genre.getId()}">
-                    </li>
-                </ul>
-            </div>
-        </label>
-        <label><span>Автор</span>
-            <input type="text"
-                   th:field="*{author}"
-                   th:value="${book.getAuthor()}"
-                   name="author"
-                   maxlength="50"
-                   required>
-        </label>
-        <label><span>Название</span>
-            <input type="text"
-                   th:field="*{name}"
-                   th:value="${book.getName()}"
-                   name="name"
-                   maxlength="200"
-                   required>
-        </label>
-        <th:block th:if="${book.getId() != null}">
-            <div class="date">
-                <label><span>Начало</span>
-                    <input type="date"
-                           th:field="*{dateStart}"
-                           th:value="${book.getDateStart()}"
-                           name="start">
-                </label>
-                <label><span>Завершение</span>
-                    <input type="date"
-                           th:field="*{dateFinish}"
-                           th:value="${book.getDateFinish()}"
-                           name="finish">
-                </label>
-            </div>
-        </th:block>
-        <div class="buttons">
-            <a href="/profile/books/plan" class="form-button align-center">Отмена</a>
-            <input type="submit" value="Сохранить">
-        </div>
-    </form>
-</th:block>
-
-<th:block th:fragment="formCommentLayout (year, book, comment)">
-    <form method="post"
-          th:action="@{${'/comment/' + year + (comment.getId() == null ? '/save/' + book.getId() : '/update/' + comment.getId())}}"
-          class="form-save">
-        <h3 th:text="${comment.getId() == null ? 'Добавить' : 'Редактировать'} + ' комментарий'"></h3>
-        <label><span>Жанр</span>
-            <input type="text" th:value="${book.getGenre().getName()}" disabled>
-        </label>
-        <label><span>Автор</span>
-            <input type="text" th:value="${book.getAuthor()}" disabled>
-        </label>
-        <label><span>Название</span>
-            <input type="text" th:value="${book.getName()}" disabled>
-        </label>
-        <label><span>Комментарий</span>
-            <textarea rows="2" th:text="${comment.getText()}" name="text" required></textarea>
-        </label>
-        <div class="buttons">
-            <a th:href="@{'/profile/books/' + ${year}}" class="form-button align-center">Отмена</a>
-            <input type="submit" value="Сохранить">
         </div>
     </form>
 </th:block>

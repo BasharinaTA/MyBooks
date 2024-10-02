@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum Report {
 
     NOT_READ("Недочитанные книги", "notRead"),
-    WRONG_DATES("Книги с некорректными датами", "wrongDates"),
+    INCORRECT_DATES("Книги с некорректными датами", "incorrectDates"),
     LAST_READ("Последние прочитанные книги", "lastRead"),
     THIS_YEAR_READ("Дочитанные за последний год книги", "thisYearRead");
 

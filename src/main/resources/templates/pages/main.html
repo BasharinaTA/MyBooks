@@ -14,14 +14,15 @@
 <th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
 <main>
     <div class="container">
-        <th:block th:if="${nav == 'book'}" th:insert="~{layouts/table.html::bookLayout (${year}, ${books})}"></th:block>
+        <th:block th:if="${nav == 'book'}" th:insert="~{layouts/table.html::tableBooksLayout (${year}, ${books})}"></th:block>
         <th:block th:if="${nav == 'plan'}"
-                  th:insert="~{layouts/table.html::planBookLayout (${name}, ${books})}"></th:block>
-        <th:block th:if="${nav == 'info'}" th:insert="~{layouts/table.html::reportLayout (${books})}"></th:block>
+                  th:insert="~{layouts/table.html::tablePlannedBooksLayout (${name}, ${books})}"></th:block>
+        <th:block th:if="${nav == 'info'}" th:insert="~{layouts/table.html::tableReportLayout (${books})}"></th:block>
         <th:block th:if="${nav == 'admin'}"
                   th:insert="~{layouts/table.html::adminLayout (${users}, ${roles}, ${statuses})}"></th:block>
     </div>
 </main>
 <script src="/js/dropdown.js"></script>
+<script src="/js/focus.js"></script>
 </body>
 </html>

@@ -1,145 +1,240 @@
 package com.mybooks.controllers;
 
-import com.mybooks.model.entities.Book;
-import com.mybooks.model.entities.Genre;
-import com.mybooks.model.entities.Profile;
-import com.mybooks.model.entities.Type;
+import com.mybooks.model.dto.BookUpdateDto;
+import com.mybooks.model.entities.*;
 import com.mybooks.services.BookService;
 import com.mybooks.services.GenreService;
 import com.mybooks.services.ProfileService;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/book")
+@RequestMapping("/books")
 public class BookController {
 
-    public static final String REDIRECT_BOOKS = "redirect:/profile/books/";
-    public static final String REDIRECT_BOOKS_PLAN = "redirect:/profile/books/plan";
+    public static final String PAGES_MAIN = "pages/main";
+    public static final String REDIRECT_BOOKS = "redirect:/books/";
+    public static final String REDIRECT_BOOKS_PLAN_SEARCH = "redirect:/books/plan/search";
+    public static final String PAGES_BOOK = "pages/book";
     private BookService bookService;
     private ProfileService profileService;
     private GenreService genreService;
 
-    @PostMapping("/{year}/form/add")
-    public String addBook(Model model, @PathVariable Integer year) {
+    @GetMapping
+    public String getBooks(Principal principal, Model model) {
+        Profile profile = profileService.getByPrincipal(principal);
+        Integer year = GregorianCalendar.getInstance().get(Calendar.YEAR);
         model.addAttribute("nav", "book");
         model.addAttribute("year", year);
-        attributesFormAdd(model);
-        return "pages/save";
+        model.addAttribute("book", new Book());
+//        model.addAttribute("comment", new Comment());
+        model.addAttribute("books", bookService.getBooksBeingReadFilterByYear(profile, year));
+        return PAGES_MAIN;
     }
 
-    private void attributesFormAdd(Model model) {
+    @GetMapping("/{year}")
+    public String getBooks(Principal principal, Model model, @PathVariable Integer year) {
+        Profile profile = profileService.getByPrincipal(principal);
+        model.addAttribute("nav", "book");
+        model.addAttribute("year", year);
+        model.addAttribute("book", new Book());
+        model.addAttribute("books", bookService.getBooksBeingReadFilterByYear(profile, year));
+        return PAGES_MAIN;
+    }
+
+    @GetMapping("/plan")
+    public String getPlannedBooks(Principal principal, Model model) {
+        Profile profile = profileService.getByPrincipal(principal);
+        model.addAttribute("nav", "plan");
+        model.addAttribute("book", new Book());
+        model.addAttribute("books", bookService.getPlannedBooksToRead(profile));
+        return PAGES_MAIN;
+    }
+
+    @GetMapping("/plan/search")
+    public String getPlannedBooks(Principal principal, Model model, @RequestParam(required = false) String search) {
+        Profile profile = profileService.getByPrincipal(principal);
+        model.addAttribute("nav", "plan");
+        if (search != null) {
+            model.addAttribute("search", search);
+        }
+        model.addAttribute("book", new Book());
+        model.addAttribute("books",
+                bookService.getPlannedBooksToReadByName(profile, (String) model.getAttribute("search")));
+        return PAGES_MAIN;
+    }
+
+    @GetMapping("/book/{year}")
+    public String getBook(Model model, @PathVariable Integer year) {
+        model.addAttribute("nav", "book");
+        model.addAttribute("year", year);
+        attributesForBook(model);
+        return PAGES_BOOK;
+    }
+
+    private void attributesForBook(Model model) {
         Book book = new Book();
         book.setType(Type.BOOK.getDescription());
-        book.setGenre(genreService.getAllByOrderByName().get(0));
+        book.setGenre(genreService.getAllOrderByName().get(0));
         model.addAttribute("book", book);
         model.addAttribute("types", Type.values());
-        model.addAttribute("genres", genreService.getAllByOrderByName());
+        model.addAttribute("genres", genreService.getAllOrderByName());
     }
 
-    @PostMapping("/{year}/form/edit/{id}")
-    public String editBook(Model model, @PathVariable Integer year, @PathVariable Integer id) {
+    @GetMapping("/book/{id}/{year}")
+    public String getBook(Principal principal, Model model,
+                          @PathVariable Integer year, @PathVariable Integer id) {
+        Profile profile = profileService.getByPrincipal(principal);
         model.addAttribute("nav", "book");
         model.addAttribute("year", year);
-        model.addAttribute("book", bookService.getById(id));
+        model.addAttribute("book", bookService.getByIdAndProfile(id, profile));
         model.addAttribute("types", Type.values());
-        model.addAttribute("genres", genreService.getAllByOrderByName());
-        return "pages/save";
+        model.addAttribute("genres", genreService.getAllOrderByName());
+        return PAGES_BOOK;
     }
 
-    @PostMapping("/{year}/save")
-    public String addBookToYear(Book book,
-                                @PathVariable Integer year,
-                                Principal principal,
-                                @RequestParam Integer genreId) {
-        editProfile(book, principal, genreId);
+    @PostMapping("/{year}")
+    public String addBook(Principal principal, Book book,
+                          @RequestParam Integer genreId, @PathVariable Integer year) {
+        Profile profile = profileService.getByPrincipal(principal);
+        bookService.save(book, genreId, profile);
         return REDIRECT_BOOKS + year;
     }
 
-    @PostMapping("/{year}/update/{id}")
-    public String updateBook(Book book,
-                             @PathVariable Integer year,
-                             @PathVariable Integer id,
-                             @RequestParam Integer genreId) {
-        bookService.update(id, book, genreId);
+    @PostMapping("/{id}/{year}")
+    public String updateBook(Principal principal, @PathVariable Integer id, @RequestParam String type,
+                             @RequestParam Integer genreId, @RequestParam String author,
+                             @RequestParam String name,
+                             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateStart,
+                             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFinish,
+                             @PathVariable Integer year) {
+        Profile profile = profileService.getByPrincipal(principal);
+        BookUpdateDto bookData = new BookUpdateDto(id, type, genreId, author, name, dateStart, dateFinish);
+        bookService.update(bookData, profile);
         return REDIRECT_BOOKS + year;
     }
 
-    @PostMapping("/form/plan/add")
-    public String addPlanBook(Model model) {
+    @GetMapping("/plan/book")
+    public String getPlannedBook(Model model, @RequestParam String search) {
         model.addAttribute("nav", "plan");
-        attributesFormAdd(model);
-        return "pages/save";
+        model.addAttribute("search", search);
+        attributesForBook(model);
+        return PAGES_BOOK;
     }
 
-    @PostMapping("/plan/save")
-    public String addPlanBook(Book book,
-                              Principal principal,
-                              @RequestParam Integer genreId) {
-        editProfile(book, principal, genreId);
-        return REDIRECT_BOOKS_PLAN;
-    }
-
-    @PostMapping("/form/plan/edit/{id}")
-    public String editPlanBook(Model model, @PathVariable Integer id) {
+    @GetMapping("/plan/book/{id}")
+    public String getPlannedBook(Principal principal, Model model,
+                                 @RequestParam String search, @PathVariable Integer id) {
+        Profile profile = profileService.getByPrincipal(principal);
         model.addAttribute("nav", "plan");
-        model.addAttribute("book", bookService.getById(id));
+        model.addAttribute("search", search);
+        model.addAttribute("book", bookService.getByIdAndProfile(id, profile));
         model.addAttribute("types", Type.values());
-        model.addAttribute("genres", genreService.getAllByOrderByName());
-        return "pages/save";
+        model.addAttribute("genres", genreService.getAllOrderByName());
+        return PAGES_BOOK;
     }
 
-    @PostMapping("/plan/update/{id}")
-    public String updatePlanBook(Book book,
-                                 @RequestParam Integer genreId,
-                                 @PathVariable Integer id) {
-        bookService.update(id, book, genreId);
-        return REDIRECT_BOOKS_PLAN;
+    @PostMapping("/plan")
+    public String addPlannedBook(Principal principal, Book book, @RequestParam Integer genreId,
+                                 RedirectAttributes ra, @RequestParam String search) {
+        Profile profile = profileService.getByPrincipal(principal);
+        bookService.save(book, genreId, profile);
+        ra.addFlashAttribute("search", search);
+        return REDIRECT_BOOKS_PLAN_SEARCH;
     }
 
-    private void editProfile(Book book, Principal principal, Integer id) {
-        Profile profile = profileService.getProfileByPrincipal(principal);
-        Genre genre = genreService.getById(id);
-        book.setProfile(profile);
-        book.setGenre(genre);
-        bookService.save(book);
+    @PostMapping("/plan/{id}")
+    public String updatePlannedBook(Principal principal, @PathVariable Integer id,
+                                    @RequestParam String type, @RequestParam Integer genreId,
+                                    @RequestParam String author, @RequestParam String name,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateStart,
+                                    @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateFinish,
+                                    RedirectAttributes ra, @RequestParam String search) {
+        Profile profile = profileService.getByPrincipal(principal);
+        BookUpdateDto bookData = new BookUpdateDto(id, type, genreId, author, name, dateStart, dateFinish);
+        bookService.update(bookData, profile);
+        ra.addFlashAttribute("search", search);
+        return REDIRECT_BOOKS_PLAN_SEARCH;
     }
 
-    @PostMapping("/updateDateStart/{id}")
-    public String updateDataStart(@PathVariable Integer id) {
-        Book book = bookService.getById(id);
-        book.setDateStart(new Date());
-        book.setDateFinish(null);
-        bookService.save(book);
-        return REDIRECT_BOOKS_PLAN;
+    @PostMapping("/dateStart/{id}")
+    public String updateDataStartBook(Principal principal, @PathVariable Integer id,
+                                      RedirectAttributes ra, @RequestParam String search) {
+        Profile profile = profileService.getByPrincipal(principal);
+        bookService.updateDateStart(id, profile);
+        ra.addFlashAttribute("search", search);
+        return REDIRECT_BOOKS_PLAN_SEARCH;
     }
 
-    @PostMapping("/updateDateFinish/{year}/{id}")
-    public String updateDataFinish(@PathVariable Integer year, @PathVariable Integer id) {
-        Book book = bookService.getById(id);
-        book.setDateFinish(new Date());
-        bookService.save(book);
+    @PostMapping("/dateFinish/{id}/{year}")
+    public String updateDataFinishBook(Principal principal, @PathVariable Integer id, @PathVariable Integer year) {
+        Profile profile = profileService.getByPrincipal(principal);
+        bookService.updateDateFinish(id, profile);
         return REDIRECT_BOOKS + year;
     }
 
-    @PostMapping("/delete/{year}/{id}")
-    public String delete(@PathVariable Integer year, @PathVariable Integer id) {
-        bookService.delete(id);
+    @PostMapping("/delete/{id}/{year}")
+    public String deleteBook(Principal principal, @PathVariable Integer id, @PathVariable Integer year) {
+        Profile profile = profileService.getByPrincipal(principal);
+        bookService.delete(id, profile);
         return REDIRECT_BOOKS + year;
     }
 
     @PostMapping("/plan/delete/{id}")
-    public String deletePlan(@PathVariable Integer id) {
-        bookService.delete(id);
-        return REDIRECT_BOOKS_PLAN;
+    public String deleteBook(Principal principal, @PathVariable Integer id, RedirectAttributes ra, @RequestParam String search) {
+        Profile profile = profileService.getByPrincipal(principal);
+        bookService.delete(id, profile);
+        ra.addFlashAttribute("search", search);
+        return REDIRECT_BOOKS_PLAN_SEARCH;
+    }
+
+    @GetMapping("/notRead")
+    public String getBooksNotRead(Principal principal, Model model) {
+        Profile profile = profileService.getByPrincipal(principal);
+        model.addAttribute("nav", "info");
+        model.addAttribute("name", Report.NOT_READ.getName());
+        model.addAttribute("reports", Report.values());
+        model.addAttribute("books", bookService.getBooksNotRead(profile));
+        return PAGES_MAIN;
+    }
+
+    @GetMapping("/incorrectDates")
+    public String getBooksWithIncorrectDates(Principal principal, Model model) {
+        Profile profile = profileService.getByPrincipal(principal);
+        model.addAttribute("nav", "info");
+        model.addAttribute("name", Report.INCORRECT_DATES.getName());
+        model.addAttribute("reports", Report.values());
+        model.addAttribute("books", bookService.getBooksWithIncorrectDates(profile));
+        return PAGES_MAIN;
+    }
+
+    @GetMapping("/lastRead")
+    public String getBooksLastRead(Principal principal, Model model) {
+        Profile profile = profileService.getByPrincipal(principal);
+        model.addAttribute("nav", "info");
+        model.addAttribute("name", Report.LAST_READ.getName());
+        model.addAttribute("reports", Report.values());
+        model.addAttribute("books", bookService.getBooksLastRead(profile));
+        return PAGES_MAIN;
+    }
+
+    @GetMapping("/thisYearRead")
+    public String getBooksThisYearRead(Principal principal, Model model) {
+        Profile profile = profileService.getByPrincipal(principal);
+        model.addAttribute("nav", "info");
+        model.addAttribute("name", Report.THIS_YEAR_READ.getName());
+        model.addAttribute("reports", Report.values());
+        model.addAttribute("books", bookService.getBooksThisYearRead(profile));
+        return PAGES_MAIN;
     }
 }

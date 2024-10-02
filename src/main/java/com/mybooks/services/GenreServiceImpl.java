@@ -17,11 +17,11 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public Genre getById(Integer id) {
         return genreRepository.findById(id).orElseThrow(() ->
-                new BaseException("Жанр с указанным id не существует"));
+                new BaseException("Жанр не найден"));
     }
 
     @Override
-    public List<Genre> getAllByOrderByName() {
+    public List<Genre> getAllOrderByName() {
         return genreRepository.findAllByOrderByName();
     }
 }

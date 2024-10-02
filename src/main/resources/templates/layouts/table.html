@@ -5,8 +5,8 @@
     <title>Title</title>
 </head>
 <body>
-<th:block th:fragment="bookLayout (year, books)">
-    <th:block th:insert="~{layouts/toolbar.html::toolbarBookLayout (${year})}"></th:block>
+<th:block th:fragment="tableBooksLayout (year, books)">
+    <th:block th:insert="~{layouts/toolbar.html::toolbarBooksLayout (${year})}"></th:block>
     <div class="scroll-table">
         <table>
             <colgroup>
@@ -35,15 +35,15 @@
                 <tr th:each="book : ${books}">
                     <td th:text="${#dates.monthName(book.getDateStart())}"></td>
                     <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}"
-                    class="text-align-center">
-                    <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
+                        class="text-align-center">
+                        <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
                     </td>
                     <td th:if="${book.getType() == 'Бумажная'}" th:title="${book.getType()}" class="text-align-center">
-                    <img src="/img/icons/book/type/book.png" th:alt="${book.getType()}">
+                        <img src="/img/icons/book/type/book.png" th:alt="${book.getType()}">
                     </td>
                     <td th:if="${book.getType() == 'Электронная'}" th:title="${book.getType()}"
-                    class="text-align-center">
-                    <img src="/img/icons/book/type/ebook.png" th:alt="${book.getType()}">
+                        class="text-align-center">
+                        <img src="/img/icons/book/type/ebook.png" th:alt="${book.getType()}">
                     </td>
                     <td th:text="${book.getGenre().getName()}"></td>
                     <td th:text="${book.getAuthor()}"></td>
@@ -55,7 +55,7 @@
                             <th:block th:if="${book.getDateFinish() == null}">
                                 <form
                                         method="post"
-                                        th:action="@{${'/book/updateDateFinish/' + year + '/' + book.getId()}}">
+                                        th:action="@{${'/books/dateFinish/' + book.getId() +'/' + year}}">
                                     <input type="image"
                                            src="/img/icons/book/button/finish.png"
                                            alt="Завершить чтение"
@@ -66,29 +66,29 @@
                             <th:block th:unless="${book.getDateFinish() == null}">
                                 <form
                                         method="get"
-                                        th:action="@{${'/comment/form/' + year + '/' + book.getId() + (book.getComment() == null ?
+                                        th:action="@{${'/comments/' + book.getId() + (book.getComment() == null ?
                                         '' : '/' + book.getComment().getId())}}">
                                     <input type="image"
                                            src="/img/icons/book/button/star.png"
-                                           alt="Оставить комментарий"
-                                           title="Оставить комментарий"
+                                           th:alt="${(book.getComment() == null ? 'Добавить' : 'Редактировать')  + ' комментарий'}"
+                                           th:title="${(book.getComment() == null ? 'Добавить' : 'Редактировать')  + ' комментарий'}"
                                            class="button">
                                 </form>
                             </th:block>
                             <form
-                                    method="post"
-                                    th:action="@{${'/book/' + year + '/form/edit/' + book.getId()}}">
+                                    method="get"
+                                    th:action="@{${'/books/book/' + book.getId()  + '/' + year}}">
                                 <input type="image"
                                        src="/img/icons/book/button/edit.png"
-                                       alt="Редактировать"
-                                       title="Редактировать"
+                                       alt="Редактировать книгу"
+                                       title="Редактировать книгу"
                                        class="button">
                             </form>
-                            <form method="post" th:action="@{${'/book/delete/' + year +'/' + book.getId()}}">
+                            <form method="post" th:action="@{${'/books/delete/' + book.getId() +'/' + year}}">
                                 <input type="image"
                                        src="/img/icons/book/button/delete.png"
-                                       alt="Удалить"
-                                       title="Удалить"
+                                       alt="Удалить книгу"
+                                       title="Удалить книгу"
                                        class="button delete">
                             </form>
                         </div>
@@ -103,8 +103,8 @@
     </div>
 </th:block>
 
-<th:block th:fragment="planBookLayout (name, books)">
-    <th:block th:insert="~{layouts/toolbar.html::toolbarPlanBookLayout (${search})}"></th:block>
+<th:block th:fragment="tablePlannedBooksLayout (name, books)">
+    <th:block th:insert="~{layouts/toolbar.html::toolbarPlannedBooksLayout (${search})}"></th:block>
     <div class="scroll-table">
         <table>
             <colgroup>
@@ -150,7 +150,8 @@
                         <div class="action">
                             <form
                                     method="post"
-                                    th:action="@{'/book/updateDateStart/' + ${book.getId()}}">
+                                    th:action="@{'/books/dateStart/' + ${book.getId()}}">
+                                <input type="text" name="search" th:value="${search != null ? search : null}" hidden>
                                 <input type="image"
                                        src="/img/icons/book/button/start.png"
                                        alt="Начать чтение"
@@ -158,19 +159,22 @@
                                        class="button">
                             </form>
                             <form
-                                    method="post"
-                                    th:action="@{'/book/form/plan/edit/' + ${book.getId()}}">
+                                    method="get"
+                                    th:action="@{${'/books/plan/book/' + book.getId()}}">
+                                <input type="text" name="search" th:value="${search != null ? search : null}" hidden>
                                 <input type="image"
                                        src="/img/icons/book/button/edit.png"
-                                       alt="Редактировать"
-                                       title="Редактировать"
+                                       alt="Редактировать книгу"
+                                       title="Редактировать книгу"
                                        class="button">
                             </form>
                             <form method="post"
-                                  th:action="@{'/book/plan/delete/' + ${book.getId()}}">
+                                  th:action="@{'/books/plan/delete/' + ${book.getId()}}">
+                                <input type="text" name="search" th:value="${search != null ? search : null}" hidden>
                                 <input type="image"
                                        src="/img/icons/book/button/delete.png"
-                                       title="Удалить"
+                                       alt="Удалить книгу"
+                                       title="Удалить книгу"
                                        class="button">
                             </form>
                         </div>
@@ -185,7 +189,7 @@
     </div>
 </th:block>
 
-<th:block th:fragment="reportLayout (books)">
+<th:block th:fragment="tableReportLayout (books)">
     <th:block th:insert="~{layouts/toolbar.html::toolbarReportLayout (${name}, ${reports})}"></th:block>
     <div class="scroll-table">
         <table>
@@ -258,44 +262,58 @@
             </tr>
             </thead>
             <th:block th:unless="${users.isEmpty()}">
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${#dates.format(user.getCreated(), 'dd.MM.yyyy')}"
-                    class="text-align-center"></td>
-                <td th:text="${user.getProfile().getSurname()}"></td>
-                <td th:text="${user.getProfile().getName()}"></td>
-                <td th:text="${user.getUsername()}">
-                </td>
-                <td th:text="${user.getRole()}">
-                </td>
-                <td th:text="${user.getStatus()}">
-                </td>
-                <td>
-                    <div class="action">
-                        <th:block th:if="${user.getStatus().name() == 'INACTIVE'}">
-                            <form method="post"
-                                  th:action="@{'/admin/unblock/user/' + ${user.getId()}}">
-                                <input type="image" src="/img/icons/user/lock.png" title="Разблокировать" class="button">
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${#dates.format(user.getCreated(), 'dd.MM.yyyy')}"
+                        class="text-align-center"></td>
+                    <td th:text="${user.getProfile().getSurname()}"></td>
+                    <td th:text="${user.getProfile().getName()}"></td>
+                    <td th:text="${user.getUsername()}"></td>
+                    <td th:text="${user.getRole()}"></td>
+                    <td th:text="${user.getStatus()}"></td>
+                    <td>
+                        <div class="action">
+                            <th:block th:if="${user.getStatus().name() == 'INACTIVE'}">
+                                <form method="post"
+                                      th:action="@{'/admin/unblock/user/' + ${user.getId()}}">
+                                    <input type="text" name="search"
+                                           th:value="${search != null ? search : null}" hidden>
+                                    <input type="image" src="/img/icons/user/lock.png"
+                                           alt="Заблокированный пользователь"
+                                           title="Разблокировать пользователя"
+                                           class="button">
+                                </form>
+                            </th:block>
+                            <th:block th:if="${user.getStatus().name() != 'INACTIVE'}">
+                                <form method="post"
+                                      th:action="@{'/admin/block/user/' + ${user.getId()}}">
+                                    <input type="text" name="search"
+                                           th:value="${search != null ? search : null}" hidden>
+                                    <input type="image" src="/img/icons/user/light-lock.png"
+                                           alt="Пользователь" title="Заблокировать пользователя"
+                                           class="button">
+                                </form>
+                            </th:block>
+                            <form method="get"
+                                  th:action="@{'/admin/user/' + ${user.getId()}}">
+                                <input type="text" name="search"
+                                       th:value="${search != null ? search : null}" hidden>
+                                <input type="image" src="/img/icons/user/setting.png"
+                                       alt="Редактировать пользователя"
+                                       title="Редактировать пользователя" class="button">
                             </form>
-                        </th:block>
-                        <th:block th:if="${user.getStatus().name() != 'INACTIVE'}">
                             <form method="post"
-                                  th:action="@{'/admin/block/user/' + ${user.getId()}}">
-                                <input type="image" src="/img/icons/user/light-lock.png" title="Заблокировать" class="button">
+                                  th:action="@{'/admin/delete/user/' + ${user.getId()}}">
+                                <input type="text" name="search"
+                                       th:value="${search != null ? search : null}" hidden>
+                                <input type="image" src="/img/icons/user/delete.png"
+                                       alt="Удалить пользователя"
+                                       title="Удалить пользователя" class="button">
                             </form>
-                        </th:block>
-                        <form method="get"
-                              th:action="@{'/admin/user/' + ${user.getId()}}">
-                            <input type="image" src="/img/icons/user/setting.png" title="Редактировать" class="button">
-                        </form>
-                        <form method="post"
-                              th:action="@{'/admin/user/delete/' + ${user.getId()}}">
-                            <input type="image" src="/img/icons/user/delete.png" title="Удалить" class="button">
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
             </th:block>
         </table>
         <th:block th:if="${users.isEmpty()}">

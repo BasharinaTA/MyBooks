@@ -15,9 +15,11 @@
 <main>
     <div class="container">
         <form method="post"
-              th:action="@{${'/admin/user/update/' + user.getId()}}"
+              th:action="@{${'/admin/update/user/' + user.getId()}}"
               class="form-save">
             <h3 class="form-header">Редактировать пользователя</h3>
+            <input type="text" name="search"
+                   th:value="${search != null ? search : null}" hidden>
             <label><span>Пользователь</span>
                 <input type="text" th:value="${user.profile.getSurname() + ' ' + user.profile.getName()}" disabled>
             </label>
@@ -26,44 +28,34 @@
             </label>
             <label><span>Роль</span>
                 <div class="dropdown">
-                    <input type="text"
-                           th:value="${user.getRole()}"
-                           class="dropdown-input hide"
-                           name="strRole">
-                    <button type="button"
-                            class="dropdown-button"
+                    <input type="text" th:value="${user.getRole()}"
+                           class="dropdown-input hide" name="role">
+                    <button type="button" class="dropdown-button"
                             th:text="${user.getRole()}">
                     </button>
                     <ul class="dropdown-list hide">
-                        <li th:each="role : ${roles}"
-                            class="dropdown-list-item"
-                            th:text="${role}"
-                            th:data-value="${role}">
+                        <li th:each="role : ${roles}" class="dropdown-list-item"
+                            th:text="${role}" th:data-value="${role}">
                         </li>
                     </ul>
                 </div>
             </label>
             <label><span>Статус</span>
                 <div class="dropdown">
-                    <input type="text"
-                           th:value="${user.getStatus()}"
-                           class="dropdown-input hide"
-                           name="strStatus">
-                    <button type="button"
-                            class="dropdown-button"
+                    <input type="text" th:value="${user.getStatus()}"
+                           class="dropdown-input hide" name="status">
+                    <button type="button" class="dropdown-button"
                             th:text="${user.getStatus()}">
                     </button>
                     <ul class="dropdown-list hide">
-                        <li th:each="status : ${statuses}"
-                            class="dropdown-list-item"
-                            th:text="${status}"
-                            th:data-value="${status}">
+                        <li th:each="status : ${statuses}" class="dropdown-list-item"
+                            th:text="${status}" th:data-value="${status}">
                         </li>
                     </ul>
                 </div>
             </label>
             <div class="buttons">
-                <a href="/admin" class="form-button align-center">Отмена</a>
+                <a th:href="${'/admin/users/search/?search=' + search}" class="form-button align-center">Отмена</a>
                 <input type="submit" value="Сохранить">
             </div>
         </form>

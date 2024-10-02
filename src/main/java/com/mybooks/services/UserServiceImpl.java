@@ -5,10 +5,8 @@ import com.mybooks.exceptions.BaseException;
 import com.mybooks.model.entities.Role;
 import com.mybooks.model.entities.Status;
 import com.mybooks.model.entities.User;
-import com.mybooks.repositories.ProfileRepository;
 import com.mybooks.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -20,18 +18,17 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
-    private ProfileRepository profileRepository;
 
     @Override
     public User getById(Integer id) {
         return userRepository.findById(id).orElseThrow(() ->
-                new BaseException("Пользователя с указанным id не существует"));
+                new BaseException("Пользователь не найден"));
     }
 
     @Override
     public User getByUsername(String name) {
         return userRepository.findByUsername(name).orElseThrow(() ->
-                new UsernameNotFoundException("Пользователя с указанным именем не существует"));
+                new BaseException("Пользователь с указанным именем не найден"));
     }
 
     @Override
@@ -40,18 +37,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllByOrderBySurnameAndName() {
+    public List<User> getAllOrderByName() {
         return userRepository.findAllByOrderByUsername()
                 .stream()
+                .filter(u -> u.getProfile() != null)
                 .sorted(Comparator.comparing(u -> u.getProfile().getName()))
                 .sorted(Comparator.comparing(u -> u.getProfile().getSurname()))
                 .toList();
     }
 
     @Override
-    public List<User> getAllByUsernameOrderBySurnameAndName(String username) {
+    public List<User> getAllByUsernameOrderByName(String username) {
         return userRepository.findAllByUsernameContainingIgnoreCaseOrderByUsername(username)
                 .stream()
+                .filter(u -> u.getProfile() != null)
                 .sorted(Comparator.comparing(u -> u.getProfile().getName()))
                 .sorted(Comparator.comparing(u -> u.getProfile().getSurname()))
                 .toList();
@@ -63,9 +62,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, Role role, Status status) {
-        user.setRole(role);
-        user.setStatus(status);
+    public User update(Integer id, String role, String status) {
+        User user = getById(id);
+        user.setRole(Role.valueOf(role));
+        user.setStatus(Status.valueOf(status));
         return userRepository.save(user);
     }
 
@@ -75,18 +75,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User blockUser(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() ->
-                new BaseException("Пользователя с указанным id не существует"));
+    public void block(Integer id) {
+        User user = getById(id);
         user.setStatus(Status.INACTIVE);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
-    public User unblockUser(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() ->
-                new BaseException("Пользователя с указанным id не существует"));
+    public void unblock(Integer id) {
+        User user = getById(id);
         user.setStatus(Status.ACTIVE);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 }

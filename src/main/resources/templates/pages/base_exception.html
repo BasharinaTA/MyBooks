@@ -13,23 +13,7 @@
 <body>
 <th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
 <main>
-    <div class="container">
-        <form method="post" action="/profiles" class="form-profile">
-            <label><span>Имя</span>
-                <input type="text" th:value="${profile.getName()}" name="name"
-                       maxlength="20" autofocus required>
-            </label>
-            <label><span>Фамилия</span>
-                <input type="text" th:value="${profile.getSurname()}" name="surname"
-                       maxlength="30" required>
-            </label>
-            <input type="submit" value="Сохранить" class="form-button">
-        </form>
-        <form method="post" action="/logout" class="form-profile">
-            <input type="submit" value="Выйти из профиля" class="form-button">
-        </form>
-    </div>
+    <div th:text="${exception}" class="container empty"></div>
 </main>
-<script src="/js/focus.js"></script>
 </body>
 </html>

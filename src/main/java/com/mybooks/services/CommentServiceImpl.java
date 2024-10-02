@@ -12,26 +12,28 @@ import org.springframework.stereotype.Service;
 public class CommentServiceImpl implements CommentService {
 
     private CommentRepository commentRepository;
-    private BookServiceImpl bookServiceImpl;
 
     @Override
     public Comment getById(Integer id) {
         return commentRepository.findById(id).orElseThrow(() ->
-                new BaseException("Комментария с указанным id не существует"));
+                new BaseException("Комментарий не найден"));
     }
 
     @Override
-    public Comment save(String text, Integer id) {
-        Book book = bookServiceImpl.getById(id);
-        Comment comment = Comment.builder()
-                .text(text)
-                .book(book)
-                .build();
+    public Comment getByIdAndBook(Integer id, Book book) {
+        return commentRepository.findByIdAndBook(id, book).orElseThrow(() ->
+                new BaseException("Комментарий для указанной книги не найден"));
+    }
+
+    @Override
+    public Comment save(Comment comment, Book book) {
+        comment.setBook(book);
         return commentRepository.save(comment);
     }
 
     @Override
-    public Comment update(Comment comment, String text) {
+    public Comment update(Integer id, Book book, String text) {
+        Comment comment = getByIdAndBook(id, book);
         comment.setText(text);
         return commentRepository.save(comment);
     }

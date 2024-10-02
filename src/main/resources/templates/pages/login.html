@@ -14,52 +14,38 @@
 <th:block th:insert="~{layouts/header.html::headerLayout (${nav})}"></th:block>
 <main>
     <div class="container">
-        <form method="post"
-              th:action="@{${nav == 'login' ? '/login' : '/user/save'}}"
-              class="form-login">
+        <form method="post" th:action="@{${nav == 'login' ? '/login' : '/'}}" class="form-login">
             <th:block th:if="${nav == 'registration'}">
                 <label><span>Фамилия</span>
-                    <input type="text"
-                           name="surname"
-                           th:value="${error != null ? surname : null}"
-                           required
-                           maxlength="30">
+                    <input type="text" name="surname" th:value="${error != null ? surname : null}"
+                           th:autofocus="${error == null ? true : false}" required maxlength="30">
                 </label>
                 <label><span>Имя</span>
-                    <input type="text"
-                           name="name"
-                           th:value="${error != null ? name : null}"
-                           required
-                           maxlength="20">
+                    <input type="text" name="name" th:value="${error != null ? name : null}"
+                           required maxlength="20">
                 </label>
             </th:block>
             <label><span>Логин</span>
-                <input type="text"
-                       name="username"
+                <input type="text" name="username" autocomplete="new-username"
+                       th:autofocus="${error == null or error == 'username'? true : false}"
                        th:value="${error != null ? username : null}"
-                       required
-                       maxlength="20">
+                       required maxlength="20">
             </label>
             <th:block th:if="${error == 'username'}">
                 <label class="error">Указанный пользователь уже существует</label>
             </th:block>
             <label><span>Пароль</span>
-                <input type="password"
-                       name="password"
-                       autocomplete="new-password"
-                       required
-                       maxlength="15">
+                <input type="password" name="password" autocomplete="new-password"
+                       th:autofocus="${error == 'password' ? true : false}"
+                       required maxlength="15">
             </label>
-            <th:block th:if="${errorAuth}">
-                <label class="error">Логин или пароль указан неверно</label>
+            <th:block th:if="${loginError}">
+                <label class="error">Неправильный логин или пароль</label>
             </th:block>
             <th:block th:if="${nav == 'registration'}">
                 <label><span>Повторите пароль</span>
-                    <input type="password"
-                           name="repeatPassword"
-                           autocomplete="new-password"
-                           required
-                           maxlength="15">
+                    <input type="password" name="repeatPassword" autocomplete="new-password"
+                           required maxlength="15">
                 </label>
                 <th:block th:if="${error == 'password'}">
                     <label class="error">Пароли не совпадают</label>
@@ -69,5 +55,6 @@
         </form>
     </div>
 </main>
+<script src="/js/focus.js"></script>
 </body>
 </html>

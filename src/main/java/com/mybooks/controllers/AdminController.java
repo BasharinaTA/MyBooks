@@ -2,75 +2,78 @@ package com.mybooks.controllers;
 
 import com.mybooks.model.entities.Role;
 import com.mybooks.model.entities.Status;
-import com.mybooks.model.entities.User;
 import com.mybooks.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static com.mybooks.controllers.BookController.PAGES_MAIN;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
 
-    public static final String PAGES_ADMIN = "pages/main";
     public static final String PAGES_USER = "pages/user";
-    public static final String REDIRECT_ADMIN = "redirect:/admin";
+    public static final String REDIRECT_ADMIN_USERS_SEARCH = "redirect:/admin/users/search";
     private UserService userService;
 
-    @GetMapping()
+    @GetMapping("/users")
     public String getUsers(Model model) {
         model.addAttribute("nav", "admin");
-        model.addAttribute("users", userService.getAllByOrderBySurnameAndName());
-        return PAGES_ADMIN;
+        model.addAttribute("users", userService.getAllOrderByName());
+        return PAGES_MAIN;
     }
 
-    @GetMapping("/search")
-    public String getUsers(Model model, @RequestParam String search) {
+    @GetMapping("/users/search")
+    public String getUsers(Model model, @RequestParam(required = false) String search) {
         model.addAttribute("nav", "admin");
-        model.addAttribute("search", search);
-        model.addAttribute("users", userService.getAllByUsernameOrderBySurnameAndName(search));
-        return PAGES_ADMIN;
+        if (search != null) {
+            model.addAttribute("search", search);
+        }
+        model.addAttribute("users",
+                userService.getAllByUsernameOrderByName((String) model.getAttribute("search")));
+        return PAGES_MAIN;
     }
 
     @PostMapping("/block/user/{id}")
-    public String blockUser(Model model, @PathVariable Integer id) {
-        model.addAttribute("nav", "admin");
-        userService.blockUser(id);
-        return REDIRECT_ADMIN;
+    public String blockUser(RedirectAttributes ra, @RequestParam String search, @PathVariable Integer id) {
+        ra.addFlashAttribute("search", search);
+        userService.block(id);
+        return REDIRECT_ADMIN_USERS_SEARCH;
     }
 
     @PostMapping("/unblock/user/{id}")
-    public String unblockUser(Model model, @PathVariable Integer id) {
-        model.addAttribute("nav", "admin");
-        userService.unblockUser(id);
-        return REDIRECT_ADMIN;
+    public String unblockUser(RedirectAttributes ra, @RequestParam String search, @PathVariable Integer id) {
+        ra.addFlashAttribute("search", search);
+        userService.unblock(id);
+        return REDIRECT_ADMIN_USERS_SEARCH;
     }
 
     @GetMapping("/user/{id}")
-    public String getUser(Model model, @PathVariable Integer id) {
+    public String getUser(Model model, @RequestParam String search, @PathVariable Integer id) {
         model.addAttribute("nav", "admin");
+        model.addAttribute("search", search);
         model.addAttribute("user", userService.getById(id));
         model.addAttribute("roles", Role.values());
         model.addAttribute("statuses", Status.values());
         return PAGES_USER;
     }
 
-    @PostMapping("/user/update/{id}")
-    public String update(@PathVariable Integer id,
-                             @RequestParam String strRole,
-                             @RequestParam String strStatus) {
-        User user = userService.getById(id);
-        Role role = Role.valueOf(strRole);
-        Status status = Status.valueOf(strStatus);
-        userService.update(user, role, status);
-        return REDIRECT_ADMIN;
+    @PostMapping("/update/user/{id}")
+    public String updateUser(RedirectAttributes ra, @RequestParam String search, @PathVariable Integer id,
+                             @RequestParam String role, @RequestParam String status) {
+        ra.addFlashAttribute("search", search);
+        userService.update(id, role, status);
+        return REDIRECT_ADMIN_USERS_SEARCH;
     }
 
-    @PostMapping("/user/delete/{id}")
-    public String delete(@PathVariable Integer id) {
+    @PostMapping("/delete/user/{id}")
+    public String deleteUser(RedirectAttributes ra, @RequestParam String search, @PathVariable Integer id) {
+        ra.addFlashAttribute("search", search);
         userService.delete(id);
-        return REDIRECT_ADMIN;
+        return REDIRECT_ADMIN_USERS_SEARCH;
     }
 }

@@ -1,12 +1,15 @@
 package com.mybooks.services;
 
+import com.mybooks.model.entities.Book;
 import com.mybooks.model.entities.Comment;
 
 public interface CommentService {
 
     Comment getById(Integer id);
 
-    Comment save(String text, Integer id);
+    Comment getByIdAndBook(Integer id, Book book);
 
-    Comment update(Comment comment, String text);
+    Comment save(Comment comment, Book book);
+
+    Comment update(Integer id, Book book, String text);
 }

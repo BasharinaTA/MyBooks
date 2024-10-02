@@ -8,5 +8,5 @@ public interface GenreService {
 
     Genre getById(Integer id);
 
-    List<Genre> getAllByOrderByName();
+    List<Genre> getAllOrderByName();
 }
