@@ -33,7 +33,7 @@
             <th:block th:if="${!books.isEmpty()}">
                 <tbody>
                 <tr th:each="book : ${books}">
-                    <td th:text="${#dates.monthName(book.getDateStart())}"></td>
+                    <td th:text="${#temporals.monthName(book.getDateStart())}"></td>
                     <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}"
                         class="text-align-center">
                         <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
@@ -48,8 +48,8 @@
                     <td th:text="${book.getGenre().getName()}"></td>
                     <td th:text="${book.getAuthor()}"></td>
                     <td th:text="${book.getName()}"></td>
-                    <td th:text="${#dates.monthName(book.getDateFinish())}"></td>
-                    <td th:text="${#dates.year(book.getDateFinish())}" class="text-align-center"></td>
+                    <td th:text="${#temporals.monthName(book.getDateFinish())}"></td>
+                    <td th:text="${#temporals.year(book.getDateFinish())}" class="text-align-center"></td>
                     <td>
                         <div class="action">
                             <th:block th:if="${book.getDateFinish() == null}">
@@ -129,8 +129,8 @@
             <th:block th:unless="${books.isEmpty()}">
                 <tbody>
                 <tr th:each="book : ${books}">
-                    <td th:text="${#dates.monthName(book.getCreated())}"></td>
-                    <td th:text="${#dates.year(book.getCreated())}" class="text-align-center"></td>
+                    <td th:text="${#temporals.monthName(book.getCreated())}"></td>
+                    <td th:text="${#temporals.year(book.getCreated())}" class="text-align-center"></td>
                     <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}"
                         class="text-align-center">
                         <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
@@ -216,8 +216,8 @@
             <th:block th:unless="${books.isEmpty()}">
                 <tbody>
                 <tr th:each="book : ${books}">
-                    <td th:text="${#dates.monthName(book.getDateStart())}"></td>
-                    <td th:text="${#dates.year(book.getDateStart())}" class="text-align-center"></td>
+                    <td th:text="${#temporals.monthName(book.getDateStart())}"></td>
+                    <td th:text="${#temporals.year(book.getDateStart())}" class="text-align-center"></td>
                     <td th:if="${book.getType() == 'Аудиокнига'}" th:title="${book.getType()}"
                         class="text-align-center">
                         <img src="/img/icons/book/type/audio-book.png" th:alt="${book.getType()}">
@@ -232,8 +232,8 @@
                     <td th:text="${book.getAuthor()}"></td>
                     <td th:text="${book.getName()}"></td>
                     <td th:text="${book.getGenre().getName()}"></td>
-                    <td th:text="${#dates.monthName(book.getDateFinish())}"></td>
-                    <td th:text="${#dates.year(book.getDateFinish())}" class="text-align-center"></td>
+                    <td th:text="${#temporals.monthName(book.getDateFinish())}"></td>
+                    <td th:text="${#temporals.year(book.getDateFinish())}" class="text-align-center"></td>
                 </tr>
                 </tbody>
             </th:block>
@@ -264,7 +264,7 @@
             <th:block th:unless="${users.isEmpty()}">
                 <tbody>
                 <tr th:each="user : ${users}">
-                    <td th:text="${#dates.format(user.getCreated(), 'dd.MM.yyyy')}"
+                    <td th:text="${#temporals.format(user.getCreated(), 'dd.MM.yyyy')}"
                         class="text-align-center"></td>
                     <td th:text="${user.getProfile().getSurname()}"></td>
                     <td th:text="${user.getProfile().getName()}"></td>

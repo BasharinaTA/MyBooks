@@ -5,7 +5,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,11 +28,11 @@ public class Book {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_start")
-    private Date dateStart;
+    private LocalDate dateStart;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "date_finish")
-    private Date dateFinish;
+    private LocalDate dateFinish;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -39,7 +40,7 @@ public class Book {
 
     @CreationTimestamp
     @Column(name="created")
-    private Date created;
+    private LocalDateTime created;
 
     @ManyToOne
     @JoinColumn(name="genre_id")

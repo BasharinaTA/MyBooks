@@ -23,7 +23,7 @@ public class AdminController {
     @GetMapping("/users")
     public String getUsers(Model model) {
         model.addAttribute("nav", "admin");
-        model.addAttribute("users", userService.getAllOrderByName());
+        model.addAttribute("users", userService.getAllByOrderByName());
         return PAGES_MAIN;
     }
 

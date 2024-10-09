@@ -18,14 +18,14 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
              and extract(year from b.dateStart) = :year
              order by b.dateStart, b.dateFinish, b.id
             """)
-    List<Book> findBooksBeingReadFilterByYear(Profile profile, Integer year);
+    List<Book> findReadingBooksByYear(Profile profile, Integer year);
 
     @Query("""
              from Book b where b.profile = :profile
              and b.dateStart is null
              order by b.created desc
             """)
-    List<Book> findPlannedBooksToRead(Profile profile);
+    List<Book> findPlannedBooks(Profile profile);
 
     @Query("""
              from Book b where  b.profile = :profile
@@ -33,7 +33,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
              and b.dateFinish is null
              order by b.dateStart desc, b.id
             """)
-    List<Book> findBooksNotRead(Profile profile);
+    List<Book> findNotReadBooks(Profile profile);
 
     @Query("""
              from Book b where b.profile = :profile

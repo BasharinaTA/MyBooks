@@ -2,13 +2,11 @@ package com.mybooks.services;
 
 import com.mybooks.model.entities.Profile;
 
-import java.security.Principal;
-
 public interface ProfileService {
 
     Profile getById(Integer id);
 
-    Profile getByPrincipal(Principal principal);
+    Profile getByUser();
 
     Profile save(String username, String password, String name, String surname);
 

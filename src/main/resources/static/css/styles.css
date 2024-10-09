@@ -101,7 +101,7 @@ nav {
 
 .form-profile label,
 .form-profile .form-button {
-    width: 35%;
+    width: 30%;
 }
 
 input,
@@ -116,6 +116,7 @@ textarea,
     font-size: 18px;
     outline: none;
     font-family: "Roboto", sans-serif;
+    resize: vertical;
 }
 
 .align-center {

@@ -27,6 +27,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment save(Comment comment, Book book) {
+        if (book.getComment() != null) {
+            throw new BaseException("Комментарий для указанной книги уже есть");
+        }
         comment.setBook(book);
         return commentRepository.save(comment);
     }

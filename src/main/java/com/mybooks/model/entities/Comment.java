@@ -4,7 +4,7 @@ import javax.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,7 +25,7 @@ public class Comment {
 
     @CreationTimestamp
     @Column(name="created")
-    private Date created;
+    private LocalDateTime created;
 
     @OneToOne
     @JoinColumn(name="book_id")

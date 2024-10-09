@@ -7,9 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
-
 @Controller
 @AllArgsConstructor
 @RequestMapping("/profiles")
@@ -20,15 +17,15 @@ public class ProfileController {
     private ProfileService profileService;
 
     @GetMapping
-    public String getProfile(Model model, Principal principal) {
+    public String getProfile(Model model) {
         model.addAttribute("nav", "profile");
-        model.addAttribute("profile", profileService.getByPrincipal(principal));
+        model.addAttribute("profile", profileService.getByUser());
         return PAGES_PROFILE;
     }
 
     @PostMapping
-    public String updateProfile(Principal principal, @RequestParam String name, @RequestParam String surname) {
-        Profile profile = profileService.getByPrincipal(principal);
+    public String updateProfile(@RequestParam String name, @RequestParam String surname) {
+        Profile profile = profileService.getByUser();
         profileService.update(profile, name, surname);
         return REDIRECT_PROFILES;
     }

@@ -9,6 +9,7 @@ import com.mybooks.repositories.BookRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -17,47 +18,55 @@ public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
     private GenreService genreService;
+    private ProfileService profileService;
 
     @Override
-    public Book getByIdAndProfile(Integer id, Profile profile) {
+    public Book getById(Integer id) {
+        Profile profile = profileService.getByUser();
         return bookRepository.findByIdAndProfile(id, profile).orElseThrow(() ->
                 new BaseException("Книга не найдена"));
     }
 
     @Override
-    public List<Book> getBooksBeingReadFilterByYear(Profile profile, Integer year) {
-        return bookRepository.findBooksBeingReadFilterByYear(profile, year);
+    public List<Book> getReadingBooksByYear(Integer year) {
+        Profile profile = profileService.getByUser();
+        return bookRepository.findReadingBooksByYear(profile, year);
     }
 
     @Override
-    public List<Book> getPlannedBooksToRead(Profile profile) {
-        return bookRepository.findPlannedBooksToRead(profile);
+    public List<Book> getPlannedBooks() {
+        Profile profile = profileService.getByUser();
+        return bookRepository.findPlannedBooks(profile);
     }
 
     @Override
-    public List<Book> getPlannedBooksToReadByName(Profile profile, String name) {
-        return bookRepository.findPlannedBooksToRead(profile)
+    public List<Book> getPlannedBooksByName(String name) {
+        Profile profile = profileService.getByUser();
+        return bookRepository.findPlannedBooks(profile)
                 .stream()
                 .filter(b -> b.getName().toLowerCase().contains(name.toLowerCase()))
                 .toList();
     }
 
     @Override
-    public List<Book> getBooksNotRead(Profile profile) {
-        return bookRepository.findBooksNotRead(profile);
+    public List<Book> getNotReadBooks() {
+        Profile profile = profileService.getByUser();
+        return bookRepository.findNotReadBooks(profile);
     }
 
     @Override
-    public List<Book> getBooksWithIncorrectDates(Profile profile) {
+    public List<Book> getBooksWithIncorrectDates() {
+        Profile profile = profileService.getByUser();
         return bookRepository.findBooksWithIncorrectDates(profile);
     }
 
     @Override
-    public List<Book> getBooksLastRead(Profile profile) {
-        Optional<Date> maxDate = bookRepository.findReadBooksWithCorrectDates(profile)
+    public List<Book> getBooksLastRead() {
+        Profile profile = profileService.getByUser();
+        Optional<LocalDate> maxDate = bookRepository.findReadBooksWithCorrectDates(profile)
                 .stream()
                 .map(Book::getDateFinish)
-                .max(Date::compareTo);
+                .max(LocalDate::compareTo);
 
         if (maxDate.isEmpty()) {
             return Collections.emptyList();
@@ -70,15 +79,17 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> getBooksThisYearRead(Profile profile) {
+    public List<Book> getBooksThisYearRead() {
+        Profile profile = profileService.getByUser();
         return bookRepository.findReadBooksWithCorrectDates(profile)
                 .stream()
-                .filter(b -> b.getDateFinish().getYear() == (new Date()).getYear())
+                .filter(b -> b.getDateFinish().getYear() == (LocalDate.now()).getYear())
                 .toList();
     }
 
     @Override
-    public Book save(Book book, Integer genreId, Profile profile) {
+    public Book save(Book book, Integer genreId) {
+        Profile profile = profileService.getByUser();
         Genre genre = genreService.getById(genreId);
         book.setGenre(genre);
         book.setProfile(profile);
@@ -86,8 +97,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book update(BookUpdateDto bookData, Profile profile) {
-        Book book = getByIdAndProfile(bookData.getId(), profile);
+    public Book update(BookUpdateDto bookData) {
+        Book book = getById(bookData.getId());
         Genre genre = genreService.getById(bookData.getGenreId());
         book.setName(bookData.getName());
         book.setAuthor(bookData.getAuthor());
@@ -99,23 +110,23 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void delete(Integer id, Profile profile) {
-        Book book = getByIdAndProfile(id, profile);
+    public void delete(Integer id) {
+        Book book = getById(id);
         bookRepository.deleteById(id);
     }
 
     @Override
-    public void updateDateStart(Integer id, Profile profile) {
-        Book book = getByIdAndProfile(id, profile);
-        book.setDateStart(new Date());
+    public void updateDateStart(Integer id) {
+        Book book = getById(id);
+        book.setDateStart(LocalDate.now());
         book.setDateFinish(null);
         bookRepository.save(book);
     }
 
     @Override
-    public void updateDateFinish(Integer id, Profile profile) {
-        Book book = getByIdAndProfile(id, profile);
-        book.setDateFinish(new Date());
+    public void updateDateFinish(Integer id) {
+        Book book = getById(id);
+        book.setDateFinish(LocalDate.now());
         bookRepository.save(book);
     }
 }

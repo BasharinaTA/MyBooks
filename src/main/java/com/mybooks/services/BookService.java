@@ -2,35 +2,34 @@ package com.mybooks.services;
 
 import com.mybooks.model.dto.BookUpdateDto;
 import com.mybooks.model.entities.Book;
-import com.mybooks.model.entities.Profile;
 
 import java.util.List;
 
 public interface BookService {
 
-    Book getByIdAndProfile(Integer id, Profile profile);
+    Book getById(Integer id);
 
-    List<Book> getBooksBeingReadFilterByYear(Profile profile, Integer year);
+    List<Book> getReadingBooksByYear(Integer year);
 
-    List<Book> getPlannedBooksToRead(Profile profile);
+    List<Book> getPlannedBooks();
 
-    List<Book> getPlannedBooksToReadByName(Profile profile, String name);
+    List<Book> getPlannedBooksByName(String name);
 
-    List<Book> getBooksNotRead(Profile profile);
+    List<Book> getNotReadBooks();
 
-    List<Book> getBooksWithIncorrectDates(Profile profile);
+    List<Book> getBooksWithIncorrectDates();
 
-    List<Book> getBooksLastRead(Profile profile);
+    List<Book> getBooksLastRead();
 
-    List<Book> getBooksThisYearRead(Profile profile);
+    List<Book> getBooksThisYearRead();
 
-    Book save(Book book, Integer genreId, Profile profile);
+    Book save(Book book, Integer genreId);
 
-    Book update(BookUpdateDto bookData, Profile profile);
+    Book update(BookUpdateDto bookData);
 
-    void delete(Integer id, Profile profile);
+    void delete(Integer id);
 
-    void updateDateStart(Integer id, Profile profile);
+    void updateDateStart(Integer id);
 
-    void updateDateFinish(Integer id, Profile profile);
+    void updateDateFinish(Integer id);
 }

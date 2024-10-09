@@ -2,8 +2,9 @@ package com.mybooks.model.entities;
 
 import javax.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,8 +26,9 @@ public class User {
     @Column(name="hash_password")
     private String hashPassword;
 
+    @CreationTimestamp
     @Column(name="created")
-    private Date created;
+    private LocalDateTime created;
 
     @Column(name="role")
     @Enumerated(EnumType.STRING)

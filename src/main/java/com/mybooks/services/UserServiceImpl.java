@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllOrderByName() {
+    public List<User> getAllByOrderByName() {
         return userRepository.findAllByOrderByUsername()
                 .stream()
                 .filter(u -> u.getProfile() != null)

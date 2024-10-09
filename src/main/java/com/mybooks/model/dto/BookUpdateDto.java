@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,6 +16,6 @@ public class BookUpdateDto {
     private Integer genreId;
     private String author;
     private String name;
-    private Date dateStart;
-    private Date dateFinish;
+    private LocalDate dateStart;
+    private LocalDate dateFinish;
 }

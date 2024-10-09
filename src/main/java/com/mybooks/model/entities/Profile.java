@@ -3,7 +3,6 @@ package com.mybooks.model.entities;
 import javax.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity

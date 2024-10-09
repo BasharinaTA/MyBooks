@@ -13,7 +13,7 @@ public interface UserService {
 
     Optional<User> getByUser(String name);
 
-    List<User> getAllOrderByName();
+    List<User> getAllByOrderByName();
 
     List<User> getAllByUsernameOrderByName(String username);
 
