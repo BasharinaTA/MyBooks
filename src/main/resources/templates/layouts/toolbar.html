@@ -8,10 +8,10 @@
 <th:block th:fragment="toolbarBooksLayout (year)">
     <div class="toolbar">
         <div class="year">
-            <a th:href="@{'/books/' + ${year - 1}}"><img src="/img/icons/arrow/arrow-left.png"
+            <a th:href="@{'/books/' + ${year - 1}}"><img src="/images/icons/arrow/arrow-left.png"
                                                          alt="Стрелка влево"></a>
             <span th:text="${year}"></span>
-            <a th:href="@{'/books/' + ${year + 1}}"><img src="/img/icons/arrow/arrow-right.png"
+            <a th:href="@{'/books/' + ${year + 1}}"><img src="/images/icons/arrow/arrow-right.png"
                                                          alt="Стрелка вправо"></a>
         </div>
         <form method="get" th:action="@{'/books/book/' + ${year}}" class="form-add">

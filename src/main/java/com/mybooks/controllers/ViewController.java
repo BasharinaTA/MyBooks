@@ -1,11 +1,9 @@
 package com.mybooks.controllers;
 
-import com.mybooks.model.entities.Profile;
 import com.mybooks.model.entities.User;
 import com.mybooks.services.ProfileService;
 import com.mybooks.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

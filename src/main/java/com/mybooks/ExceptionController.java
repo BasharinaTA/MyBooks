@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionController {
 
-    public static final String PAGES_BASE_EXCEPTION = "pages/base_exception";
+    public static final String PAGES_BASE_EXCEPTION = "pages/base-exception";
 
     @ExceptionHandler(BaseException.class)
     public String handleBaseException(BaseException exception, Model model) {

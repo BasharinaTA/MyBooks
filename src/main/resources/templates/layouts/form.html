@@ -64,8 +64,8 @@
                 </label>
             </div>
             <div class="buttons">
-                <a th:href="@{${'/books/' + year}}" class="form-button align-center">Отмена</a>
-                <input type="submit" value="Сохранить">
+                <a th:href="@{${'/books/' + year}}" class="form-button">Отмена</a>
+                <input type="submit" value="Сохранить" class="form-button">
             </div>
         </div>
     </form>
@@ -136,8 +136,8 @@
                 </div>
             </th:block>
             <div class="buttons">
-                <a th:href="${'/books/plan/search?search=' + search}" class="form-button align-center">Отмена</a>
-                <input type="submit" value="Сохранить">
+                <a th:href="${'/books/plan/search?search=' + search}" class="form-button">Отмена</a>
+                <input type="submit" value="Сохранить" class="form-button">
             </div>
         </div>
     </form>

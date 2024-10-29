@@ -111,7 +111,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void delete(Integer id) {
-        Book book = getById(id);
+        getById(id);
         bookRepository.deleteById(id);
     }
 

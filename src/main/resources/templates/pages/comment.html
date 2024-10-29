@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Мои книги</title>
-    <link rel="icon" href="/img/icons/logo/book_logo.png">
+    <link rel="icon" href="/images/icons/logo/book_logo.png">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,8 +34,8 @@
                           autofocus required></textarea>
             </label>
             <div class="buttons">
-                <a th:href="@{${'/books/' + year}}" class="form-button align-center">Отмена</a>
-                <input type="submit" value="Сохранить">
+                <a th:href="@{${'/books/' + year}}" class="form-button">Отмена</a>
+                <input type="submit" value="Сохранить" class="form-button">
             </div>
         </form>
     </div>
