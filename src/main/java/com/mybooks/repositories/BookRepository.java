@@ -16,7 +16,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
              from Book b where b.profile = :profile
              and b.dateStart is not null
              and extract(year from b.dateStart) = :year
-             order by b.dateStart, b.dateFinish, b.id
+             order by b.dateStart desc, b.dateFinish desc, b.id desc
             """)
     List<Book> findReadingBooksByYear(Profile profile, Integer year);
 
@@ -31,7 +31,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
              from Book b where  b.profile = :profile
              and b.dateStart is not null and b.dateStart <= current_timestamp
              and b.dateFinish is null
-             order by b.dateStart desc, b.id
+             order by b.dateStart desc, b.id desc
             """)
     List<Book> findNotReadBooks(Profile profile);
 
@@ -41,7 +41,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
              or b.dateStart > current_timestamp
              or b.dateFinish > current_timestamp
              or b.dateStart > b.dateFinish)
-             order by b.dateStart desc nulls last, b.dateFinish, b.id
+             order by b.dateStart desc nulls last, b.dateFinish desc, b.id desc
             """)
     List<Book> findBooksWithIncorrectDates(Profile profile);
 
@@ -50,7 +50,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             and  b.dateStart is not null and b.dateStart <= current_timestamp
             and b.dateFinish is not null and b.dateFinish <= current_timestamp
             and b.dateStart <= b.dateFinish
-            order by b.dateStart, b.dateFinish, b.id
+            order by b.dateStart desc, b.dateFinish desc, b.id desc
             """)
     List<Book> findReadBooksWithCorrectDates(Profile profile);
 
